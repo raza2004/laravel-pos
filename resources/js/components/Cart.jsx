@@ -721,7 +721,7 @@ class Cart extends Component {
                                 border: "1px solid #dddddd",
                                 textAlign: "left",
                                 padding: "8px",
-                                backgroundColor: "#dddddd",
+                                backgroundColor: "#cfcfcf",
                                 fontSize: "18px"
                             }}>
                                 <th>Item Name</th>

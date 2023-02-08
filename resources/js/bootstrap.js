@@ -13,11 +13,11 @@ window.Swal = Swal;
 import Popper from 'popper.js';
 window.Popper = Popper;
 
-import jQuery from 'jquery';
-window.$ = window.jQuery = jQuery;
+import $ from 'jquery';
+window.$ = window.$ = $;
 
 import DataTable from 'datatables.net-bs4';
-DataTable(window, window.$);
+//  DataTable(window, window.$);
 
 import 'bootstrap';
 import 'admin-lte';

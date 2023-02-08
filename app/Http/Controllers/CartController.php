@@ -9,7 +9,12 @@ class CartController extends Controller
 {
     public function index(Request $request)
     {
+        // $result = $request->wantsJson();
+        // print_r($result);
+        // die;
         if ($request->wantsJson()) {
+            // print_r('Insert -----');
+            // die;
             return response(
                 $request->user()->cart()->get()
             );

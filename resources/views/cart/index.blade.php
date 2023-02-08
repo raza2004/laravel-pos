@@ -3,6 +3,6 @@
 @section('title', 'Open POS')
 
 @section('content')
-    <div id="cart"></div>
+    <div id="cart">Test </div>
 
 @endsection

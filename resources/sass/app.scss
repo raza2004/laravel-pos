@@ -22,10 +22,131 @@ $fa-font-path: "@fortawesome/fontawesome-free/webfonts";
 // DataTables
 @import 'datatables.net-bs4/css/dataTables.bootstrap4.min.css';
 
+.row3 {
+    background-color: blanchedalmond;
+    width: 100%;
+    // text-align: center !important;
+}
+
+.pricer {
+    background-color: #e7e7fd;
+}
+
+.rite {
+    background-color: rgb(249, 253, 233) !important;
+}
+
+.text-right1 {
+    margin-left: -9%;
+}
+
+.text-right {
+    margin-top: -2% !important;
+}
+
+.del {
+    background-color: #ccc !important;
+    border: 1px solid #fff;
+    padding: 3.5px;
+}
+
+.thead {
+    background-color: #f5f500;
+
+}
+
+.trash {
+    color: black;
+}
+
+
+.col1 {
+    width: 50%;
+    padding: 5px;
+    margin-left: 0px;
+    margin-top: 10px;
+    // display: contents;
+    // white-space: nowrap;
+    // column-gap: 0px;
+    // display: grid;
+    // margin: -2px;
+
+}
+
+.form-control {
+    width: 88%;
+    display: block;
+}
+
+.col2 {
+    width: 47%;
+    padding: 5px;
+}
+
+.btn2 {
+    background-color: #3232e2 !important;
+    border: 1px solid #020257;
+    color: #fff;
+    margin-top: -07px;
+    // position: relative;
+    // margin-left: 1%;
+    // margin-top: 09% !important;
+    // width: auto;
+    //     padding: 6px 12px;
+    cursor: pointer;
+
+}
+
+.mr-2 {
+    width: 50%;
+    row-gap: 2px;
+}
+
+.btn22 {
+    width: 70% !important;
+    padding: 5%;
+    // display: block;
+    background-color: #3232e2 !important;
+    // border: 1px solid #020257;
+    margin-top: 5px;
+    margin-bottom: 3px;
+    margin-left: -11%;
+    font-size: large;
+}
+
+.btn11 {
+    width: 70% !important;
+    padding: 5%;
+    margin-top: 5px;
+    background-color: #0bc01a;
+    color: #ffffff;
+    // border: 1px solid #777707;
+    margin-bottom: 3px;
+    // display: block;
+    // display: contents;
+    font-size: large;
+}
+
+.btn11:hover {
+    background-color: #0bc01a !important;
+    color: #fcfcf8 !important;
+}
+
+.btn2:hover {
+    background-color: #0a0a47 !important;
+    border: #101083;
+}
+
 .user-cart {
     .card {
-        height: 400px;
+        min-height: 60vh;
+        width: auto;
+        height: 50% !important;
+        max-height: 60vh !important;
+        overflow: scroll;
+
     }
+
     .qty {
         width: 45px;
         float: left;
@@ -33,27 +154,73 @@ $fa-font-path: "@fortawesome/fontawesome-free/webfonts";
 }
 
 .order-product {
+    max-width: 100%;
+    margin-left: 10;
+
     .item {
         float: left;
         border: 1px solid #ccc;
         border-radius: 3px;
-        background: #fff;
-        margin: 0 2px 4px 2px;
+        background: #fcfcf8;
+        width: 20%;
+        display: grid;
+        justify-content: center;
+        padding: 6px;
+        height: 180px;
+        margin-bottom: 10px;
+        margin-left: 10px;
+
         img {
             width: 100px;
             height: 100px;
             max-width: 100%;
         }
+
         h5 {
             font-size: 13px;
-            text-align: center;
+            // display: flex;
+            // text-align: justify;
+            // width: 110px;
+            // margin: 0 auto;
         }
     }
 }
 
+.total {
+    margin-left: 2.5%;
+    background-color: blanchedalmond;
+    margin-top: 2%;
+}
+
+
+
 .product-list {
+    height: auto;
+
     .product-img {
-        max-width: 70px;
-        max-height: 70px;
+        max-width: 80px;
+        max-height: 80px;
     }
+}
+
+.card::-webkit-scrollbar {
+    width: 3px;
+    overflow-x: hidden;
+}
+
+/* Track */
+.card::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px rgb(252, 252, 252);
+    border-radius: 10px;
+}
+
+/* Handle */
+.card::-webkit-scrollbar-thumb {
+    background: rgb(198, 201, 184);
+    border-radius: 10px;
+}
+
+/* Handle on hover */
+.card::-webkit-scrollbar-thumb:hover {
+    background: #b30000;
 }

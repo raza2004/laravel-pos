@@ -5,18 +5,21 @@ import Swal from "sweetalert2";
 import { sum } from "lodash";
 import { BiTrash } from 'react-icons/bi';
 import noProduct from '../../../storage/app/public/products/noProduct.png'
-import { Alert } from "bootstrap";
+import { Alert, Button } from "bootstrap";
 const yoloUrl = 'https://yolofood.qa/';
 class Cart extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            orderDetail: "order detail",
             cart: [],
+            grandTotal: 0,
             products: [],
             customers: [],
             barcode: "",
             search: "",
             customer_id: "",
+            isPayment: false,
             newData: [
                 {
                     "barcode": 778,
@@ -284,6 +287,7 @@ class Cart extends Component {
         const barcode = event.target.value;
         console.log(barcode);
         this.setState({ barcode });
+
     }
 
     loadCart() {
@@ -414,13 +418,15 @@ class Cart extends Component {
         if (!!product) {
             console.log('name > ', product.name)
             // if product is already in cart
-            let cart = this.state.cart.find((c) => c.id === data.barcode);
+            let cart = this.state.cart.find((c) => c.barcode === data.barcode);
+            console.log('Cart  ', this.state.cart)
             if (!!cart) {
                 // update quantity
+                console.log('update qty ')
                 this.setState({
                     cart: this.state.cart.map((c) => {
                         if (
-                            c.id === data.barcode &&
+                            c.barcode === data.barcode &&
                             data.available > c.pivot.quantity
                         ) {
                             c.pivot.quantity = c.pivot.quantity + 1;
@@ -429,6 +435,7 @@ class Cart extends Component {
                     }),
                 });
             } else {
+                console.log('add new item ')
                 if (product.available > 0) {
                     product = {
                         ...product,
@@ -490,231 +497,257 @@ class Cart extends Component {
     render() {
         const { cart, products, customers, barcode } = this.state;
         return (
-            // <div className="row">
-            //     <div className="col-md-7 col-lg-7">
-            //         <div className="row mb-2">
-            //             <div className="col">
-            //                 <form onSubmit={this.handleScanBarcode}>
-            //                     <input
-            //                         type="text"
-            //                         className="form-control"
-            //                         placeholder="Scan Barcode..."
-            //                         value={barcode}
-            //                         onChange={this.handleOnChangeBarcode}
-            //                     />
-            //                 </form>
-            //             </div>
-            //             <div className="col">
-            //                 <select
-            //                     className="form-control"
-            //                     onChange={this.setCustomerId}
-            //                 >
-            //                     <option value="">Walking Customer</option>
-            //                     {customers.map((cus) => (
-            //                         <option
-            //                             key={cus.id}
-            //                             value={cus.id}
-            //                         >{`${cus.first_name} ${cus.last_name}`}</option>
-            //                     ))}
-            //                 </select>
-            //             </div>
-            //         </div>
-            //         <div className="user-cart">
-            //             <div className="card">
-            //                 <table className="table table-striped">
-            //                     <thead className="thead">
-            //                         <tr>
-            //                             <th>Product Name</th>
-            //                             <th className="text-centre">Price</th>
-            //                             <th>Quantity</th>
-            //                         </tr>
-            //                     </thead>
-            //                     <tbody>
-            //                         {cart.map((c) => (
-            //                             <tr key={c.id} className="rite">
-            //                                 <td>{c.name}</td>
-            //                                 <td className="text-right1">
-            //                                     {window.APP.currency_symbol}{" "}
-            //                                     {(
-            //                                         c.price * c.pivot.quantity
-            //                                     ).toFixed(2)}
-            //                                 </td>
-            //                                 <td>
-            //                                     <input type="text"
-            //                                         className="form-control form-control-sm qty pricer"
-            //                                         value={c.pivot.quantity}
-            //                                         onChange={(event) =>
-            //                                             this.handleChangeQty(
-            //                                                 c.id,
-            //                                                 event.target.value
-            //                                             )
-            //                                         }
-            //                                     />
-            //                                     <button
-            //                                         className="btn btn-danger btn-sm del"
-            //                                         onClick={() =>
-            //                                             this.handleClickDelete(
-            //                                                 c.id
-            //                                             )
-            //                                         }
-            //                                     >
-            //                                         <BiTrash className="trash" />
-            //                                     </button>
-            //                                 </td>
+            <div>
+                {this.state.isPayment === false ?
+                    (<div className="row">
+                        <div className="col-md-7 col-lg-7">
+                            <div className="row mb-2">
+                                <div className="col">
+                                    <form onSubmit={this.handleScanBarcode}>
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            placeholder="Scan Barcode..."
+                                            value={barcode}
+                                            onChange={this.handleOnChangeBarcode}
+                                        />
+                                    </form>
+                                </div>
+                                <div className="col">
+                                    <select
+                                        className="form-control"
+                                        onChange={this.setCustomerId}
+                                    >
+                                        <option value="">Walking Customer</option>
+                                        {customers.map((cus) => (
+                                            <option
+                                                key={cus.id}
+                                                value={cus.id}
+                                            >{`${cus.first_name} ${cus.last_name}`}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </div>
+                            <div className="user-cart">
+                                <div className="card">
+                                    <table className="table table-striped">
+                                        <thead className="thead">
+                                            <tr>
+                                                <th>Product Name</th>
+                                                <th className="text-centre">Price</th>
+                                                <th>Quantity</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {cart.map((c) => (
+                                                <tr key={c.id} className="rite">
+                                                    <td>{c.name}</td>
+                                                    <td className="text-right1">
+                                                        {window.APP.currency_symbol}{" "}
+                                                        {(
+                                                            c.price * c.pivot.quantity
+                                                        ).toFixed(2)}
+                                                    </td>
+                                                    <td>
+                                                        <input type="text"
+                                                            className="form-control form-control-sm qty pricer"
+                                                            value={c.pivot.quantity}
+                                                            onChange={(event) =>
+                                                                this.handleChangeQty(
+                                                                    c.id,
+                                                                    event.target.value
+                                                                )
+                                                            }
+                                                        />
+                                                        <button
+                                                            className="btn btn-danger btn-sm del"
+                                                            onClick={() =>
+                                                                this.handleClickDelete(
+                                                                    c.id
+                                                                )
+                                                            }
+                                                        >
+                                                            <BiTrash className="trash" />
+                                                        </button>
+                                                    </td>
 
-            //                             </tr>
-            //                         ))}
-            //                     </tbody>
-            //                     {/* <button
-            //                         className="btn btn-danger btn-lg del"
-            //                         onClick={() =>
-            //                             this.handleAllDelete()
-            //                         }
-            //                     >
-            //                         <BiTrash className="trash" />
-            //                     </button> */}
-            //                 </table>
-            //             </div>
-            //         </div>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                        {/* <button
+                                    className="btn btn-danger btn-lg del"
+                                    onClick={() =>
+                                        this.handleAllDelete()
+                                    }
+                                >
+                                    <BiTrash className="trash" />
+                                </button> */}
+                                    </table>
+                                </div>
+                            </div>
 
-            //         <div className="row3">
-            //             <div className="total">Total:</div>
-            //             <div className="col text-right">
-            //                 {window.APP.currency_symbol} {this.getTotal(cart)}
-            //             </div>
-            //         </div>
-            //         <div className="row" style={{ paddingLeft: 10, justifyContent: 'center' }}>
-            //             {/* <div className="col"> */}
-            //             <div className="btn-group-vertical col2">
-            //                 <button
-            //                     type="button"
-            //                     className="btn btn-danger btn-block"
-            //                     onClick={this.handleEmptyCart}
-            //                     disabled={!cart.length}>
-            //                     Cancel
-            //                 </button>
-            //                 <button
-            //                     type="button"
-            //                     className="btn btn-primary btn-block"
-            //                     disabled={!cart.length}
-            //                     onClick={this.handleClickSubmit}
-            //                     style={{ marginTop: 4 }}>
-            //                     Submit
-            //                 </button>
-            //             </div>
-            //             <div className="btn-group mr-2">
-            //                 <button
-            //                     type="button"
-            //                     className="btn group-vertical btn11"
-            //                     onClick={this.handleClickSubmit}
-            //                     disabled={!cart.length}
-            //                 >
-            //                     Payment
-            //                 </button>
-            //                 <button style={{ marginLeft: 5, }}
-            //                     type="button"
-            //                     className="btn btn-success btn-block btn22"
-            //                     onClick="button"
-            //                     disabled={!cart.length}
-            //                 >
-            //                     Print Bill
-            //                 </button>
-            //             </div>
-            //             {/* </div> */}
-            //         </div>
-            //     </div >
-            //     <div className="col-md-6 col-lg-5">
-            //         <div className="mb-2">
-            //             <input
-            //                 size="30"
-            //                 type="text"
-            //                 className="form-control"
-            //                 placeholder="Search Product..."
-            //                 onChange={this.handleChangeSearch}
-            //                 onKeyDown={this.handleSearch}
-            //             />
-            //         </div>
-            //         {/* <div className="order-product">
-            //             {products.map((p) => (
-            //                 <div
-            //                     onClick={() => this.addProductToCart(p.barcode)}
-            //                     key={p.id}
-            //                     className="item"
-            //                 >
-            //                     <img src={p.image_url} alt="no image" />
-            //                     <h5
-            //                         style={
-            //                             window.APP.warning_quantity > p.quantity
-            //                                 ? { color: "red" }
-            //                                 : {}
-            //                         }
-            //                     >
-            //                         {p.name}({p.quantity})
-            //                     </h5>
-            //                 </div>
-            //             ))}
-            //         </div> */}
-            //         <div className="order-product">
-            //             {this.state.newData.map((d) => (
-            //                 <div
-            //                     style={{}}
-            //                     onClick={() => {
-            //                         this.addProductToCart(d)
-            //                     }}
-            //                     key={d.barcode}
-            //                     className="item"
-            //                 >
-            //                     <img src={d.logom} alt="no image" />
-            //                     <p style={{ fontSize: 15, textAlign: 'center' }}>
-            //                         <b> {d.name.toUpperCase().substring(0, 5)}</b>
-            //                         <p style={{ fontSize: 12, textAlign: 'center' }}>Total Qty : {d.available}</p>
-            //                         <p style={{ fontSize: 12, marginTop: -15, textAlign: 'center' }}>Price : Rs.{d.price}</p>
-            //                     </p>
-            //                 </div>
-            //             ))}
-            //         </div>
-            //     </div>
-            // </div>
-            <div style={{
-                padding: 21,
-                borderWidth: 5,
-                borderColor: '#0000',
-                width: '60%', height: "80%", justifyContent: 'center', alignContent: "center", backgroundColor: "yellow",
-            }}>
-                <div>
-                    <p style={{ fontWeight: 'bold', fontSize: 30, }}>Print Order</p>
-                    <p style={{ fontSize: 20 }}>POS Order</p>
-                </div>
-                <div >Order Detail :  </div>
-                {/* <div class="row" style={{ paddingLeft: 15 }}> */}
-                {/* <div style={{ fontWeight: 'bold' }} > */}
-                <p>  Chicken Tikka </p>
-                {/* </div> */}
-                <div >1 Qty  </div>
-                {/* <div style={{ fontWeight: 'bold', justifyContent: 'flex-end' }} > */}
-                <p>  850 </p>
-                {/* </div> */}
-                {/* </div> */}
-                <div class="row" style={{ paddingLeft: 15 }}>
-                    <div style={{ fontWeight: 'bold' }} ><p>  Garlic Bread </p></div>
-                    <div >10 Qty  </div>
-                    <div style={{ fontWeight: 'bold' }} ><p>  2000 </p></div>
-                </div>
-                <div class="row" style={{ paddingLeft: 15 }}>
-                    <div style={{ fontWeight: 'bold' }} ><p>  Roghni Naan </p></div>
-                    <div >8 Qty  </div>
-                    <div style={{ fontWeight: 'bold' }} ><p>  2000 </p></div>
-                </div>
-                <div class="row" style={{ paddingLeft: 15 }}>
-                    <div style={{ fontWeight: 'bold' }} >Total Amount :  </div>
-                    <div style={{ fontWeight: 'bold' }} ><p>  Rs. 4850 </p></div>
-                </div>
-                <div class="row" style={{ paddingLeft: 15 }}>
-                    <div style={{ fontWeight: 'bold' }} >Payment Mode :  </div>
-                    <div style={{ fontWeight: 'bold' }} ><p>  COD </p></div>
-                </div>
-            </div >
-
+                            <div className="row3">
+                                <div className="total">Total:</div>
+                                <div className="col text-right">
+                                    {window.APP.currency_symbol} {this.getTotal(cart)}
+                                </div>
+                            </div>
+                            <div className="row" style={{ paddingLeft: 10, justifyContent: 'center' }}>
+                                {/* <div className="col"> */}
+                                <div className="btn-group-vertical col2">
+                                    <button
+                                        type="button"
+                                        className="btn btn-danger btn-block"
+                                        onClick={this.handleEmptyCart}
+                                        disabled={!cart.length}>
+                                        Cancel
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className="btn btn-primary btn-block"
+                                        disabled={!cart.length}
+                                        onClick={this.handleClickSubmit}
+                                        style={{ marginTop: 4 }}>
+                                        Submit
+                                    </button>
+                                </div>
+                                <div className="btn-group mr-2">
+                                    <button
+                                        type="button"
+                                        className="btn group-vertical btn11"
+                                        onClick={this.handleClickSubmit}
+                                        disabled={!cart.length}
+                                    >
+                                        Payment
+                                    </button>
+                                    <button style={{ marginLeft: 5, }}
+                                        type="button"
+                                        className="btn btn-success btn-block btn22"
+                                        onClick={() => {
+                                            this.setState({ isPayment: true },
+                                                () => {
+                                                    let total = 0
+                                                    for (let i = 0; i < this.state.cart.length; i++) {
+                                                        total = total + this.state.cart[i].price * this.state.cart[i].pivot.quantity
+                                                    }
+                                                    this.setState({ grandTotal: total })
+                                                })
+                                        }}
+                                        disabled={!cart.length}
+                                    >
+                                        Print Bill
+                                    </button>
+                                </div>
+                                {/* </div> */}
+                            </div>
+                        </div >
+                        <div className="col-md-6 col-lg-5">
+                            <div className="mb-2">
+                                <input
+                                    size="30"
+                                    type="text"
+                                    className="form-control"
+                                    placeholder="Search Product..."
+                                    onChange={this.handleChangeSearch}
+                                    onKeyDown={this.handleSearch}
+                                />
+                            </div>
+                            {/* <div className="order-product">
+                        {products.map((p) => (
+                            <div
+                                onClick={() => this.addProductToCart(p.barcode)}
+                                key={p.id}
+                                className="item"
+                            >
+                                <img src={p.image_url} alt="no image" />
+                                <h5
+                                    style={
+                                        window.APP.warning_quantity > p.quantity
+                                            ? { color: "red" }
+                                            : {}
+                                    }
+                                >
+                                    {p.name}({p.quantity})
+                                </h5>
+                            </div>
+                        ))}
+                    </div> */}
+                            <div className="order-product">
+                                {this.state.newData.map((d) => (
+                                    <div
+                                        style={{}}
+                                        onClick={() => {
+                                            this.addProductToCart(d)
+                                        }}
+                                        key={d.barcode}
+                                        className="item"
+                                    >
+                                        <img src={d.logom} alt="no image" />
+                                        <p style={{ fontSize: 15, textAlign: 'center' }}>
+                                            <b> {d.name.toUpperCase().substring(0, 5)}</b>
+                                            <p style={{ fontSize: 12, textAlign: 'center' }}>Total Qty : {d.available}</p>
+                                            <p style={{ fontSize: 12, marginTop: -15, textAlign: 'center' }}>Price : Rs.{d.price}</p>
+                                        </p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>)
+                    :
+                    (<div>
+                        <h3>
+                            <center>{this.state.orderDetail.toUpperCase()}</center>
+                        </h3>
+                        <button
+                            className="btn btn-success btn-lg"
+                            style={{
+                                backgroundColor: 'maroon', padding: 5, paddingInline: 20,
+                                marginLeft: "96%",
+                                marginTop: "-30px",
+                                border: "1px solid maroon"
+                            }}
+                            onClick={() =>
+                                this.setState({
+                                    isPayment: false
+                                }, () => console.log('isPayment ', this.state.isPayment))
+                            }
+                        >{'X'} </button>
+                        <table style={{
+                            fontFamily: " arial, sans-serif",
+                            borderCollapse: "collapse",
+                            width: "100%"
+                        }}>
+                            <tr style={{
+                                border: "1px solid #dddddd",
+                                textAlign: "left",
+                                padding: "8px",
+                                backgroundColor: "#dddddd",
+                                fontSize: "18px"
+                            }}>
+                                <th>Item Name</th>
+                                <th>Quantity</th>
+                                <th>Price{" (Rs)"}</th>
+                                <th>Sub Total{" (Rs)"}</th>
+                            </tr>
+                            {this.state.cart.map((item) => (
+                                <tr>
+                                    <td>{item.name}</td>
+                                    <td>{item.pivot.quantity}.0</td>
+                                    <td className="a">{item.price}.00</td>
+                                    <td className="b">{item.pivot.quantity * item.price}.00</td>
+                                </tr>
+                            ))}
+                            <br />
+                            <tr style={{ backgroundColor: "#ada3a3", fontSize: "18px" }}>
+                                <td><b>Grand Total </b> </td>
+                                <td></td>
+                                <td></td>
+                                <td><b>Rs. {this.state.grandTotal}.00</b></td>
+                            </tr>
+                        </table>
+                    </div>)
+                }
+            </div>
         );
     }
 }

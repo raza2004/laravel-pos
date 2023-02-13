@@ -3,7 +3,7 @@
 @section('title', 'Orders List')
 @section('content-header', 'Order List')
 @section('content-actions')
-    <a href="{{route('cart.index')}}" class="btn btn-primary">Open POS</a>
+    <a href="{{route('cart.index')}}" class="btn btn-primary btnopen">Open POS</a>
 @endsection
 
 @section('content')
@@ -37,6 +37,7 @@
                     <th>Status</th>
                     <th>To Pay</th>
                     <th>Created At</th>
+                    
                 </tr>
             </thead>
             <tbody>

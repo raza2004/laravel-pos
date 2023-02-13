@@ -1,11 +1,15 @@
 import React, { Component, } from "react";
 import ReactDOM from "react-dom";
 import axios from "axios";
+import { ReactSearchAutocomplete } from 'react-search-autocomplete'
+
 import Swal from "sweetalert2";
-import { sum } from "lodash";
+import { find, sum } from "lodash";
 import { BiTrash } from 'react-icons/bi';
 import noProduct from '../../../storage/app/public/products/noProduct.png'
 import { Alert, Button } from "bootstrap";
+import { ImCross } from "react-icons/im";
+import { data } from "jquery";
 const yoloUrl = 'https://yolofood.qa/';
 class Cart extends Component {
     constructor(props) {
@@ -20,6 +24,7 @@ class Cart extends Component {
             search: "",
             customer_id: "",
             isPayment: false,
+            serachData: [],
             newData: [
                 {
                     "barcode": 778,
@@ -47,7 +52,7 @@ class Cart extends Component {
                     "description": "Tikka flavor pizza with chicken tikka chunks.",
                     "image": "c192f61b-ba02-4f61-8e6e-ab93e7669948",
                     "price": 300,
-                    "category_id": 82,
+                    "category_id": 5,
                     "created_at": "2020-12-01 09:21:55",
                     "updated_at": "2020-12-02 05:50:10",
                     "available": 18,
@@ -70,7 +75,7 @@ class Cart extends Component {
                     "category_id": 82,
                     "created_at": "2020-12-01 09:22:49",
                     "updated_at": "2020-12-07 11:50:42",
-                    "available": 144,
+                    "available": 2,
                     "has_variants": 0,
                     "vat": null,
                     "speciality_id": 11,
@@ -356,8 +361,8 @@ class Cart extends Component {
                     "speciality_id": null,
                     "days": "Saturday,Sunday,Monday,Tuesday,Wednesday,Thursday,Friday",
                     "approx_time": null,
-                    "logom": yoloUrl + "https://foodtiger.mobidonia.com/uploads/restorants/94d44523-ec90-4069-bd11-eb9588207c31_large.jpg",
-                    "icon": yoloUrl + "https://foodtiger.mobidonia.com/uploads/restorants/94d44523-ec90-4069-bd11-eb9588207c31_thumbnail.jpg",
+                    "logom": "https://foodtiger.mobidonia.com/uploads/restorants/94d44523-ec90-4069-bd11-eb9588207c31_large.jpg",
+                    "icon": "https://foodtiger.mobidonia.com/uploads/restorants/94d44523-ec90-4069-bd11-eb9588207c31_thumbnail.jpg",
                     "short_description": "Bolognese sauce, mozzarella Sabelli",
                     "category_name": "Lasagna"
                 },
@@ -376,8 +381,8 @@ class Cart extends Component {
                     "speciality_id": null,
                     "days": "Saturday,Sunday,Monday,Tuesday,Wednesday,Thursday,Friday",
                     "approx_time": null,
-                    "logom": yoloUrl + "https://foodtiger.mobidonia.com/uploads/restorants/4c367950-992c-4711-ab56-42bed10de86c_large.jpg",
-                    "icon": yoloUrl + "https://foodtiger.mobidonia.com/uploads/restorants/4c367950-992c-4711-ab56-42bed10de86c_thumbnail.jpg",
+                    "logom": "https://foodtiger.mobidonia.com/uploads/restorants/4c367950-992c-4711-ab56-42bed10de86c_large.jpg",
+                    "icon": "https://foodtiger.mobidonia.com/uploads/restorants/4c367950-992c-4711-ab56-42bed10de86c_thumbnail.jpg",
                     "short_description": "chicken fillet, cream (animal), corn,...",
                     "category_name": "Lasagna"
                 },
@@ -396,8 +401,8 @@ class Cart extends Component {
                     "speciality_id": 12,
                     "days": "Saturday,Sunday,Monday,Tuesday,Wednesday,Thursday,Friday",
                     "approx_time": null,
-                    "logom": yoloUrl + "https://foodtiger.mobidonia.com/uploads/restorants/8bafc3ec-82e7-46f8-964a-77a13e4ddf96_large.jpg",
-                    "icon": yoloUrl + "https://foodtiger.mobidonia.com/uploads/restorants/8bafc3ec-82e7-46f8-964a-77a13e4ddf96_thumbnail.jpg",
+                    "logom": "https://foodtiger.mobidonia.com/uploads/restorants/8bafc3ec-82e7-46f8-964a-77a13e4ddf96_large.jpg",
+                    "icon": "https://foodtiger.mobidonia.com/uploads/restorants/8bafc3ec-82e7-46f8-964a-77a13e4ddf96_thumbnail.jpg",
                     "short_description": "smoked cheese, blue cheese, emmental,...",
                     "category_name": "Lasagna"
                 },
@@ -416,8 +421,8 @@ class Cart extends Component {
                     "speciality_id": null,
                     "days": "Saturday,Sunday,Monday,Tuesday,Wednesday,Thursday,Friday",
                     "approx_time": null,
-                    "logom": yoloUrl + "https://foodtiger.mobidonia.com/uploads/restorants/b65d5389-4742-4a78-9d94-f31110984db6_large.jpg",
-                    "icon": yoloUrl + "https://foodtiger.mobidonia.com/uploads/restorants/b65d5389-4742-4a78-9d94-f31110984db6_thumbnail.jpg",
+                    "logom": "https://foodtiger.mobidonia.com/uploads/restorants/b65d5389-4742-4a78-9d94-f31110984db6_large.jpg",
+                    "icon": "https://foodtiger.mobidonia.com/uploads/restorants/b65d5389-4742-4a78-9d94-f31110984db6_thumbnail.jpg",
                     "short_description": "fresh pasta, cream (animal), onion,...",
                     "category_name": "Fresh Pasta"
                 },
@@ -436,8 +441,8 @@ class Cart extends Component {
                     "speciality_id": 10,
                     "days": "Saturday,Sunday,Monday,Tuesday,Wednesday,Thursday,Friday",
                     "approx_time": null,
-                    "logom": yoloUrl + "https://foodtiger.mobidonia.com/uploads/restorants/4a2067cb-f39c-4b26-83ef-9097512d3328_large.jpg",
-                    "icon": yoloUrl + "https://foodtiger.mobidonia.com/uploads/restorants/4a2067cb-f39c-4b26-83ef-9097512d3328_thumbnail.jpg",
+                    "logom": "https://foodtiger.mobidonia.com/uploads/restorants/4a2067cb-f39c-4b26-83ef-9097512d3328_large.jpg",
+                    "icon": "https://foodtiger.mobidonia.com/uploads/restorants/4a2067cb-f39c-4b26-83ef-9097512d3328_thumbnail.jpg",
                     "short_description": "fresh pasta, cream (animal), blue...",
                     "category_name": "Fresh Pasta"
                 },
@@ -456,8 +461,8 @@ class Cart extends Component {
                     "speciality_id": null,
                     "days": "Saturday,Sunday,Monday,Tuesday,Wednesday,Thursday,Friday",
                     "approx_time": null,
-                    "logom": yoloUrl + "https://foodtiger.mobidonia.com/uploads/restorants/0bae6238-dda6-4630-b300-5125fde865d4_large.jpg",
-                    "icon": yoloUrl + "https://foodtiger.mobidonia.com/uploads/restorants/0bae6238-dda6-4630-b300-5125fde865d4_thumbnail.jpg",
+                    "logom": "https://foodtiger.mobidonia.com/uploads/restorants/0bae6238-dda6-4630-b300-5125fde865d4_large.jpg",
+                    "icon": "https://foodtiger.mobidonia.com/uploads/restorants/0bae6238-dda6-4630-b300-5125fde865d4_thumbnail.jpg",
                     "short_description": "fresh pasta, cream (animal), mushrooms,...",
                     "category_name": "Fresh Pasta"
                 },
@@ -476,8 +481,8 @@ class Cart extends Component {
                     "speciality_id": null,
                     "days": "Saturday,Sunday,Monday,Tuesday,Wednesday,Thursday,Friday",
                     "approx_time": null,
-                    "logom": yoloUrl + "https://foodtiger.mobidonia.com/uploads/restorants/033c32c1-cdae-495e-910f-66b5fa239297_large.jpg",
-                    "icon": yoloUrl + "https://foodtiger.mobidonia.com/uploads/restorants/033c32c1-cdae-495e-910f-66b5fa239297_thumbnail.jpg",
+                    "logom": "https://foodtiger.mobidonia.com/uploads/restorants/033c32c1-cdae-495e-910f-66b5fa239297_large.jpg",
+                    "icon": "https://foodtiger.mobidonia.com/uploads/restorants/033c32c1-cdae-495e-910f-66b5fa239297_thumbnail.jpg",
                     "short_description": "Arborio rice, chicken breast, onion,...",
                     "category_name": "Fresh Pasta"
                 },
@@ -496,8 +501,8 @@ class Cart extends Component {
                     "speciality_id": null,
                     "days": "Saturday,Sunday,Monday,Tuesday,Wednesday,Thursday,Friday",
                     "approx_time": null,
-                    "logom": yoloUrl + "https://foodtiger.mobidonia.com/uploads/restorants/08d82944-f947-48f4-a197-a3199bb3b6e7_large.jpg",
-                    "icon": yoloUrl + "https://foodtiger.mobidonia.com/uploads/restorants/08d82944-f947-48f4-a197-a3199bb3b6e7_thumbnail.jpg",
+                    "logom": "https://foodtiger.mobidonia.com/uploads/restorants/08d82944-f947-48f4-a197-a3199bb3b6e7_large.jpg",
+                    "icon": "https://foodtiger.mobidonia.com/uploads/restorants/08d82944-f947-48f4-a197-a3199bb3b6e7_thumbnail.jpg",
                     "short_description": "Arborio rice, mushrooms, garlic,...",
                     "category_name": "Fresh Pasta"
                 },
@@ -516,8 +521,8 @@ class Cart extends Component {
                     "speciality_id": null,
                     "days": "Saturday,Sunday,Monday,Tuesday,Wednesday,Thursday,Friday",
                     "approx_time": null,
-                    "logom": yoloUrl + "https://foodtiger.mobidonia.com/uploads/restorants/cc695ba9-8af3-47a4-8e41-dc1706cbf2c3_large.jpg",
-                    "icon": yoloUrl + "https://foodtiger.mobidonia.com/uploads/restorants/cc695ba9-8af3-47a4-8e41-dc1706cbf2c3_thumbnail.jpg",
+                    "logom": "https://foodtiger.mobidonia.com/uploads/restorants/cc695ba9-8af3-47a4-8e41-dc1706cbf2c3_large.jpg",
+                    "icon": "https://foodtiger.mobidonia.com/uploads/restorants/cc695ba9-8af3-47a4-8e41-dc1706cbf2c3_thumbnail.jpg",
                     "short_description": "fresh pasta, bolognese sauce, parmesan",
                     "category_name": "Fresh Pasta"
                 },
@@ -536,8 +541,8 @@ class Cart extends Component {
                     "speciality_id": 12,
                     "days": "Saturday,Sunday,Monday,Tuesday,Wednesday,Thursday,Friday",
                     "approx_time": null,
-                    "logom": yoloUrl + "https://foodtiger.mobidonia.com/uploads/restorants/f71ae2d7-f24f-4e1b-9bdd-7ab7143ce3c8_large.jpg",
-                    "icon": yoloUrl + "https://foodtiger.mobidonia.com/uploads/restorants/f71ae2d7-f24f-4e1b-9bdd-7ab7143ce3c8_thumbnail.jpg",
+                    "logom": "https://foodtiger.mobidonia.com/uploads/restorants/f71ae2d7-f24f-4e1b-9bdd-7ab7143ce3c8_large.jpg",
+                    "icon": "https://foodtiger.mobidonia.com/uploads/restorants/f71ae2d7-f24f-4e1b-9bdd-7ab7143ce3c8_thumbnail.jpg",
                     "short_description": "tomato sauce, mozzarella sabelli,...",
                     "category_name": "Pizza"
                 },
@@ -556,8 +561,8 @@ class Cart extends Component {
                     "speciality_id": 12,
                     "days": "Saturday,Sunday,Monday,Tuesday,Wednesday,Thursday,Friday",
                     "approx_time": null,
-                    "logom": yoloUrl + "https://foodtiger.mobidonia.com/uploads/restorants/9b9886cb-5d4b-4bfe-a02a-dc3b94dae706_large.jpg",
-                    "icon": yoloUrl + "https://foodtiger.mobidonia.com/uploads/restorants/9b9886cb-5d4b-4bfe-a02a-dc3b94dae706_thumbnail.jpg",
+                    "logom": "https://foodtiger.mobidonia.com/uploads/restorants/9b9886cb-5d4b-4bfe-a02a-dc3b94dae706_large.jpg",
+                    "icon": "https://foodtiger.mobidonia.com/uploads/restorants/9b9886cb-5d4b-4bfe-a02a-dc3b94dae706_thumbnail.jpg",
                     "short_description": "tomato sauce, mozzarella sabelli,...",
                     "category_name": "Pizza"
                 },
@@ -576,8 +581,8 @@ class Cart extends Component {
                     "speciality_id": 12,
                     "days": "Saturday,Sunday,Monday,Tuesday,Wednesday,Thursday,Friday",
                     "approx_time": "20",
-                    "logom": yoloUrl + "https://foodtiger.mobidonia.com/uploads/restorants/4b26647d-52b8-43c5-8b62-708c99252c24_large.jpg",
-                    "icon": yoloUrl + "https://foodtiger.mobidonia.com/uploads/restorants/4b26647d-52b8-43c5-8b62-708c99252c24_thumbnail.jpg",
+                    "logom": "https://foodtiger.mobidonia.com/uploads/restorants/4b26647d-52b8-43c5-8b62-708c99252c24_large.jpg",
+                    "icon": "https://foodtiger.mobidonia.com/uploads/restorants/4b26647d-52b8-43c5-8b62-708c99252c24_thumbnail.jpg",
                     "short_description": "tomato sauce, mozzarella Sabelli,...",
                     "category_name": "Pizza"
                 },
@@ -596,8 +601,8 @@ class Cart extends Component {
                     "speciality_id": 12,
                     "days": "Saturday,Sunday,Monday,Tuesday,Wednesday,Thursday,Friday",
                     "approx_time": null,
-                    "logom": yoloUrl + "https://foodtiger.mobidonia.com/uploads/restorants/e1e5559a-ca6d-4a34-80c6-b72c31d97d96_large.jpg",
-                    "icon": yoloUrl + "https://foodtiger.mobidonia.com/uploads/restorants/e1e5559a-ca6d-4a34-80c6-b72c31d97d96_thumbnail.jpg",
+                    "logom": "https://foodtiger.mobidonia.com/uploads/restorants/e1e5559a-ca6d-4a34-80c6-b72c31d97d96_large.jpg",
+                    "icon": "https://foodtiger.mobidonia.com/uploads/restorants/e1e5559a-ca6d-4a34-80c6-b72c31d97d96_thumbnail.jpg",
                     "short_description": "tomato sauce, mozzarella sabelli,...",
                     "category_name": "Pizza"
                 },
@@ -616,8 +621,8 @@ class Cart extends Component {
                     "speciality_id": 12,
                     "days": "Saturday,Sunday,Monday,Tuesday,Wednesday,Thursday,Friday",
                     "approx_time": null,
-                    "logom": yoloUrl + "https://foodtiger.mobidonia.com/uploads/restorants/a8e8c22a-84cd-48d0-971a-2c98e695e387_large.jpg",
-                    "icon": yoloUrl + "https://foodtiger.mobidonia.com/uploads/restorants/a8e8c22a-84cd-48d0-971a-2c98e695e387_thumbnail.jpg",
+                    "logom": "https://foodtiger.mobidonia.com/uploads/restorants/a8e8c22a-84cd-48d0-971a-2c98e695e387_large.jpg",
+                    "icon": "https://foodtiger.mobidonia.com/uploads/restorants/a8e8c22a-84cd-48d0-971a-2c98e695e387_thumbnail.jpg",
                     "short_description": "tomato sauce, mozzarella sabelli,...",
                     "category_name": "Pizza"
                 },
@@ -636,8 +641,8 @@ class Cart extends Component {
                     "speciality_id": 12,
                     "days": "Saturday,Sunday,Monday,Tuesday,Wednesday,Thursday,Friday",
                     "approx_time": null,
-                    "logom": yoloUrl + "https://foodtiger.mobidonia.com/uploads/restorants/5c8fa7eb-bc11-42e1-a1a5-ffb0b3d7a6b7_large.jpg",
-                    "icon": yoloUrl + "https://foodtiger.mobidonia.com/uploads/restorants/5c8fa7eb-bc11-42e1-a1a5-ffb0b3d7a6b7_thumbnail.jpg",
+                    "logom": "https://foodtiger.mobidonia.com/uploads/restorants/5c8fa7eb-bc11-42e1-a1a5-ffb0b3d7a6b7_large.jpg",
+                    "icon": "https://foodtiger.mobidonia.com/uploads/restorants/5c8fa7eb-bc11-42e1-a1a5-ffb0b3d7a6b7_thumbnail.jpg",
                     "short_description": "tomato sauce, mozzarella sabelli, ham,...",
                     "category_name": "Pizza"
                 },
@@ -656,8 +661,8 @@ class Cart extends Component {
                     "speciality_id": 12,
                     "days": "Saturday,Sunday,Monday,Tuesday,Wednesday,Thursday,Friday",
                     "approx_time": null,
-                    "logom": yoloUrl + "https://foodtiger.mobidonia.com/uploads/restorants/9d180742-9fb3-4b46-8563-8c24c9004fd3_large.jpg",
-                    "icon": yoloUrl + "https://foodtiger.mobidonia.com/uploads/restorants/9d180742-9fb3-4b46-8563-8c24c9004fd3_thumbnail.jpg",
+                    "logom": "https://foodtiger.mobidonia.com/uploads/restorants/9d180742-9fb3-4b46-8563-8c24c9004fd3_large.jpg",
+                    "icon": "https://foodtiger.mobidonia.com/uploads/restorants/9d180742-9fb3-4b46-8563-8c24c9004fd3_thumbnail.jpg",
                     "short_description": "tomato sauce, mozzarella Sabelli, extra...",
                     "category_name": "Pizza"
                 },
@@ -676,8 +681,8 @@ class Cart extends Component {
                     "speciality_id": 12,
                     "days": "Saturday,Sunday,Monday,Tuesday,Wednesday,Thursday,Friday",
                     "approx_time": null,
-                    "logom": yoloUrl + "https://foodtiger.mobidonia.com/uploads/restorants/cb7372d0-73a8-4551-bc31-22035d9551c4_large.jpg",
-                    "icon": yoloUrl + "https://foodtiger.mobidonia.com/uploads/restorants/cb7372d0-73a8-4551-bc31-22035d9551c4_thumbnail.jpg",
+                    "logom": "https://foodtiger.mobidonia.com/uploads/restorants/cb7372d0-73a8-4551-bc31-22035d9551c4_large.jpg",
+                    "icon": "https://foodtiger.mobidonia.com/uploads/restorants/cb7372d0-73a8-4551-bc31-22035d9551c4_thumbnail.jpg",
                     "short_description": "",
                     "category_name": "Pizza"
                 },
@@ -696,8 +701,8 @@ class Cart extends Component {
                     "speciality_id": 12,
                     "days": "Saturday,Sunday,Monday,Tuesday,Wednesday,Thursday,Friday",
                     "approx_time": null,
-                    "logom": yoloUrl + "https://foodtiger.mobidonia.com/uploads/restorants/0102bebe-b6c4-46b0-9195-ee06bca71a37_large.jpg",
-                    "icon": yoloUrl + "https://foodtiger.mobidonia.com/uploads/restorants/0102bebe-b6c4-46b0-9195-ee06bca71a37_thumbnail.jpg",
+                    "logom": "https://foodtiger.mobidonia.com/uploads/restorants/0102bebe-b6c4-46b0-9195-ee06bca71a37_large.jpg",
+                    "icon": "https://foodtiger.mobidonia.com/uploads/restorants/0102bebe-b6c4-46b0-9195-ee06bca71a37_thumbnail.jpg",
                     "short_description": "tomato sauce, mozzarella sabelli, ham,...",
                     "category_name": "Pizza"
                 },
@@ -716,8 +721,8 @@ class Cart extends Component {
                     "speciality_id": null,
                     "days": "Saturday,Sunday,Monday,Tuesday,Wednesday,Thursday,Friday",
                     "approx_time": null,
-                    "logom": yoloUrl + "https://foodtiger.mobidonia.com/uploads/restorants/0054144d-131c-4807-a209-cee855415182_large.jpg",
-                    "icon": yoloUrl + "https://foodtiger.mobidonia.com/uploads/restorants/0054144d-131c-4807-a209-cee855415182_thumbnail.jpg",
+                    "logom": "https://foodtiger.mobidonia.com/uploads/restorants/0054144d-131c-4807-a209-cee855415182_large.jpg",
+                    "icon": "https://foodtiger.mobidonia.com/uploads/restorants/0054144d-131c-4807-a209-cee855415182_thumbnail.jpg",
                     "short_description": "cream (animal), mozzarella Sabelli,...",
                     "category_name": "Pizza"
                 },
@@ -736,8 +741,8 @@ class Cart extends Component {
                     "speciality_id": null,
                     "days": "Saturday,Sunday,Monday,Tuesday,Wednesday,Thursday,Friday",
                     "approx_time": null,
-                    "logom": yoloUrl + "https://foodtiger.mobidonia.com/uploads/restorants/f77218a9-676e-434e-ac5b-4ae3dc5795b3_large.jpg",
-                    "icon": yoloUrl + "https://foodtiger.mobidonia.com/uploads/restorants/f77218a9-676e-434e-ac5b-4ae3dc5795b3_thumbnail.jpg",
+                    "logom": "https://foodtiger.mobidonia.com/uploads/restorants/f77218a9-676e-434e-ac5b-4ae3dc5795b3_large.jpg",
+                    "icon": "https://foodtiger.mobidonia.com/uploads/restorants/f77218a9-676e-434e-ac5b-4ae3dc5795b3_thumbnail.jpg",
                     "short_description": "tomato sauce, Sabelli mozzarella,...",
                     "category_name": "Pizza"
                 },
@@ -776,8 +781,8 @@ class Cart extends Component {
                     "speciality_id": 0,
                     "days": "Saturday,Sunday,Monday,Tuesday,Wednesday,Thursday,Friday",
                     "approx_time": "20",
-                    "logom": yoloUrl + "https://foodtiger.mobidonia.com/uploads/restorants/bd5292e7-e898-479d-8921-4c47a776ba82_large.jpg",
-                    "icon": yoloUrl + "https://foodtiger.mobidonia.com/uploads/restorants/bd5292e7-e898-479d-8921-4c47a776ba82_thumbnail.jpg",
+                    "logom": "https://foodtiger.mobidonia.com/uploads/restorants/bd5292e7-e898-479d-8921-4c47a776ba82_large.jpg",
+                    "icon": "https://foodtiger.mobidonia.com/uploads/restorants/bd5292e7-e898-479d-8921-4c47a776ba82_thumbnail.jpg",
                     "short_description": "peeled tomatoes, mozzarella salad,...",
                     "category_name": "Salads"
                 },
@@ -796,8 +801,8 @@ class Cart extends Component {
                     "speciality_id": 0,
                     "days": "Saturday,Sunday,Monday,Tuesday,Wednesday,Thursday,Friday",
                     "approx_time": "15",
-                    "logom": yoloUrl + "https://foodtiger.mobidonia.com/uploads/restorants/25ed56dc-45cc-473f-ad00-d4b449acc71a_large.jpg",
-                    "icon": yoloUrl + "https://foodtiger.mobidonia.com/uploads/restorants/25ed56dc-45cc-473f-ad00-d4b449acc71a_thumbnail.jpg",
+                    "logom": "https://foodtiger.mobidonia.com/uploads/restorants/25ed56dc-45cc-473f-ad00-d4b449acc71a_large.jpg",
+                    "icon": "https://foodtiger.mobidonia.com/uploads/restorants/25ed56dc-45cc-473f-ad00-d4b449acc71a_thumbnail.jpg",
                     "short_description": "iceberg, bacon, chicken breast,...",
                     "category_name": "Salads"
                 },
@@ -816,8 +821,8 @@ class Cart extends Component {
                     "speciality_id": null,
                     "days": "Saturday,Sunday,Monday,Tuesday,Wednesday,Thursday,Friday",
                     "approx_time": null,
-                    "logom": yoloUrl + "https://foodtiger.mobidonia.com/uploads/restorants/93641a19-dba6-4010-a852-0e88da83a01f_large.jpg",
-                    "icon": yoloUrl + "https://foodtiger.mobidonia.com/uploads/restorants/93641a19-dba6-4010-a852-0e88da83a01f_thumbnail.jpg",
+                    "logom": "https://foodtiger.mobidonia.com/uploads/restorants/93641a19-dba6-4010-a852-0e88da83a01f_large.jpg",
+                    "icon": "https://foodtiger.mobidonia.com/uploads/restorants/93641a19-dba6-4010-a852-0e88da83a01f_thumbnail.jpg",
                     "short_description": "iceberg, arugula, cherry tomatoes,...",
                     "category_name": "Salads"
                 },
@@ -836,8 +841,8 @@ class Cart extends Component {
                     "speciality_id": 0,
                     "days": "Saturday,Sunday,Monday,Tuesday,Wednesday,Thursday,Friday",
                     "approx_time": "52",
-                    "logom": yoloUrl + "https://foodtiger.mobidonia.com/uploads/restorants/d3379607-df34-4ed0-8f87-8bb6f73ed16d_large.jpg",
-                    "icon": yoloUrl + "https://foodtiger.mobidonia.com/uploads/restorants/d3379607-df34-4ed0-8f87-8bb6f73ed16d_thumbnail.jpg",
+                    "logom": "https://foodtiger.mobidonia.com/uploads/restorants/d3379607-df34-4ed0-8f87-8bb6f73ed16d_large.jpg",
+                    "icon": "https://foodtiger.mobidonia.com/uploads/restorants/d3379607-df34-4ed0-8f87-8bb6f73ed16d_thumbnail.jpg",
                     "short_description": "lettuce, cucumbers, tuna, olive, corn,...",
                     "category_name": "Salads"
                 },
@@ -856,8 +861,8 @@ class Cart extends Component {
                     "speciality_id": null,
                     "days": "Saturday,Sunday,Monday,Tuesday,Wednesday,Thursday,Friday",
                     "approx_time": null,
-                    "logom": yoloUrl + "https://foodtiger.mobidonia.com/uploads/restorants/2e7eb9a6-5307-4ec7-8cf8-86490d4c2363_large.jpg",
-                    "icon": yoloUrl + "https://foodtiger.mobidonia.com/uploads/restorants/2e7eb9a6-5307-4ec7-8cf8-86490d4c2363_thumbnail.jpg",
+                    "logom": "https://foodtiger.mobidonia.com/uploads/restorants/2e7eb9a6-5307-4ec7-8cf8-86490d4c2363_large.jpg",
+                    "icon": "https://foodtiger.mobidonia.com/uploads/restorants/2e7eb9a6-5307-4ec7-8cf8-86490d4c2363_thumbnail.jpg",
                     "short_description": "lettuce, cucumbers, radishes, onions,...",
                     "category_name": "Salads"
                 },
@@ -876,8 +881,8 @@ class Cart extends Component {
                     "speciality_id": null,
                     "days": "Saturday,Sunday,Monday,Tuesday,Wednesday,Thursday,Friday",
                     "approx_time": null,
-                    "logom": yoloUrl + "https://foodtiger.mobidonia.com/uploads/restorants/f5a8b88d-9b94-44fc-9555-2f0fe043d624_large.jpg",
-                    "icon": yoloUrl + "https://foodtiger.mobidonia.com/uploads/restorants/f5a8b88d-9b94-44fc-9555-2f0fe043d624_thumbnail.jpg",
+                    "logom": "https://foodtiger.mobidonia.com/uploads/restorants/f5a8b88d-9b94-44fc-9555-2f0fe043d624_large.jpg",
+                    "icon": "https://foodtiger.mobidonia.com/uploads/restorants/f5a8b88d-9b94-44fc-9555-2f0fe043d624_thumbnail.jpg",
                     "short_description": "tomatoes, cucumbers, green pepper, red...",
                     "category_name": "Salads"
                 },
@@ -921,7 +926,8 @@ class Cart extends Component {
                     "short_description": "made with fresh and Halal chicken with...",
                     "category_name": "Salads"
                 }
-            ]
+            ],
+            searchedData: []
         };
 
         this.loadCart = this.loadCart.bind(this);
@@ -936,6 +942,9 @@ class Cart extends Component {
         this.setCustomerId = this.setCustomerId.bind(this);
         this.handleClickSubmit = this.handleClickSubmit.bind(this);
     }
+
+
+
 
     componentDidMount() {
         // load user cart
@@ -963,30 +972,59 @@ class Cart extends Component {
     // }
 
     //Yolo API
-    loadProducts = (id) => {
-        console.log('ID > ', id)
-        axios({
-            headers: {},
-            method: 'get',
-            url: `https://yolofood.qa/api/restorant/1/all_items`,
-            params: {}
-        })
-            .then((response) => {
-                console.log('--------------' + response.data);
-            })
-            .catch((error) => error);
-        return;
-
-        axios.get('https://yolofood.qa/api/restorant/1/all_items')
-            .then((response) => {
-                console.log('YOLO DATA  > ', response.data);
-            });
+    searchProduct = async (recBarcode) => {
+        let filteredArray = []
+        let actualData = this.state.newData
+        for (let i = 0; i < actualData.length; i++) {
+            if (actualData[i].barcode === Number(recBarcode)) {
+                filteredArray.push(actualData[i])
+                await this.addProductToCart(actualData[i])
+                return
+            }
+        }
     }
+
+    deleteItemFromCart = async (recBarcode) => {
+        console.log('Del ID ? ', recBarcode)
+        let actualData = this.state.cart
+        console.log('actualData of Cart > ', actualData)
+        for (let i = 0; i < actualData.length; i++) {
+            if (actualData[i].barcode === Number(recBarcode)) {
+                let index = actualData.indexOf(actualData[i])
+                actualData.splice(index, 1)
+                console.log('updated Cart > ', actualData)
+            }
+        }
+        await this.setState({ cart: actualData })
+        console.log('updated Cart > ', actualData)
+    }
+
+    addToCartByScan = async (recBarcode) => {
+        let filteredArray = []
+        let actualData = this.state.newData
+        for (let i = 0; i < actualData.length; i++) {
+            if (actualData[i].barcode === Number(recBarcode)) {
+                filteredArray.push(actualData[i])
+                await this.setState({ searchedData: filteredArray })
+                return
+            }
+            else if (actualData[i].barcode != Number(recBarcode)) {
+                await this.setState({ searchedData: [] })
+
+            }
+        }
+    }
+
+    loadProducts = (id) => {
+        this.searchProduct(id)
+    }
+
 
     handleOnChangeBarcode(event) {
         const barcode = event.target.value;
-        console.log(barcode);
+        console.log('>>>', barcode);
         this.setState({ barcode });
+        this.addToCartByScan(barcode)
 
     }
 
@@ -1016,8 +1054,25 @@ class Cart extends Component {
         }
     }
     handleChangeQty(product_id, qty) {
+
+        const newCart = this.state.cart.map((c) => {
+            if (c.barcode === product_id) {
+                this.state.newData.map((f) => {
+                    if (f.barcode === product_id && f.available > c.pivot.quantity) {
+                        c.pivot.quantity = qty;
+                    }
+                })
+            }
+            return c;
+        });
+
+        this.setState({ newCart });
+        if (!qty) return;
+
+
+
         const cart = this.state.cart.map((c) => {
-            if (c.id === product_id) {
+            if (c.barcode === product_id) {
                 c.pivot.quantity = qty;
             }
             return c;
@@ -1025,7 +1080,7 @@ class Cart extends Component {
 
         this.setState({ cart });
         if (!qty) return;
-
+        return
         axios
             .post("/admin/cart/change-qty", { product_id, quantity: qty })
             .then((res) => { })
@@ -1038,7 +1093,24 @@ class Cart extends Component {
         const total = cart.map((c) => c.pivot.quantity * c.price);
         return sum(total).toFixed(2);
     }
+
+
+
     handleClickDelete(product_id) {
+        let json = product_id
+        // this.state.cart.splice(0, 1); // 2nd parameter means remove one item only
+        console.log('Cartttttttt > ', product_id)
+        this.deleteItemFromCart(product_id)
+        return
+        const index = this.state.cart.indexOf(find(id => {
+            return id === json
+        }));
+        console.log('Indexxx > ', index)
+        if (index > -1) { // only splice array when item is found
+            this.state.cart.splice(index, 1); // 2nd parameter means remove one item only
+        }
+        return
+        //old CODE
         axios
             .post("/admin/cart/delete", { product_id, _method: "DELETE" })
             .then((res) => {
@@ -1062,6 +1134,11 @@ class Cart extends Component {
             this.loadProducts(event.target.value);
         }
     }
+    handleSearchButton(event) {
+        this.loadProducts(this.state.search);
+    }
+
+
 
     // addProductToCart(barcode) {
     //     let product = this.state.products.find((p) => p.barcode === barcode);
@@ -1108,12 +1185,11 @@ class Cart extends Component {
     //     }
     // }
 
+    addProductToCartManually(newproduct, input) {
+        console.log('Input > ', input, '|   Product >', newproduct)
 
-    addProductToCart(data) {
-        // newfuntion for Yolo data
-        // console.log('barcode > ', data.barcode)
-        // console.log('barcode > ', data)
-        // return
+
+        return
         let product = this.state.newData.find((p) => p.barcode === data.barcode);
         if (!!product) {
             console.log('name > ', product.name)
@@ -1125,11 +1201,59 @@ class Cart extends Component {
                 console.log('update qty ')
                 this.setState({
                     cart: this.state.cart.map((c) => {
-                        if (
-                            c.barcode === data.barcode &&
-                            data.available > c.pivot.quantity
-                        ) {
+                        if (c.barcode === data.barcode && data.available > c.pivot.quantity) {
                             c.pivot.quantity = c.pivot.quantity + 1;
+                        } if (c.barcode === data.barcode && data.available === c.pivot.quantity) {
+                            Swal.fire("Error!", "Stock Limit Exceeded", "error");
+                        }
+                        return c;
+                    }),
+                });
+            } else {
+                console.log('add new item ')
+                if (product.available > 0) {
+                    product = {
+                        ...product,
+                        pivot: {
+                            quantity: 1,
+                            product_id: data.barcode,
+                            user_id: 1,
+                        },
+                    };
+
+                    this.setState({ cart: [...this.state.cart, product] });
+                }
+            }
+            console.log('cart {{>}} ', this.state.cart)
+            // axios
+            //     .post("/admin/cart", { barcode })
+            //     .then((res) => {
+            //         this.loadCart();
+            //         console.log('Axios Response on adding cart > ', res);
+            //     })
+            //     .catch((err) => {
+            //         Swal.fire("Error!", err.response.data.message, "error");
+            //     });
+        }
+
+    }
+
+    addProductToCart(data) {
+        let product = this.state.newData.find((p) => p.barcode === data.barcode);
+        if (!!product) {
+            console.log('name > ', product.name)
+            // if product is already in cart
+            let cart = this.state.cart.find((c) => c.barcode === data.barcode);
+            console.log('Cart  ', this.state.cart)
+            if (!!cart) {
+                // update quantity
+                console.log('update qty ')
+                this.setState({
+                    cart: this.state.cart.map((c) => {
+                        if (c.barcode === data.barcode && data.available > c.pivot.quantity) {
+                            c.pivot.quantity = c.pivot.quantity + 1;
+                        } if (c.barcode === data.barcode && data.available === c.pivot.quantity) {
+                            Swal.fire("Error!", "Stock Limit Exceeded", "error");
                         }
                         return c;
                     }),
@@ -1161,6 +1285,7 @@ class Cart extends Component {
             //     });
         }
     }
+
 
     setCustomerId(event) {
         this.setState({ customer_id: event.target.value });
@@ -1194,6 +1319,15 @@ class Cart extends Component {
             }
         });
     }
+    filteredArrays() {
+        let filteredArrays = []
+        for (let i = 0; i < newData.length; i++) {
+            if (newData[i].id === 778) {
+                filteredArrays.push(newData[i])
+            }
+        };
+
+    }
     render() {
         const { cart, products, customers, barcode } = this.state;
         return (
@@ -1204,12 +1338,14 @@ class Cart extends Component {
                             <div className="row mb-2">
                                 <div className="col">
                                     <form onSubmit={this.handleScanBarcode}>
+
                                         <input
+                                            size="30"
                                             type="text"
                                             className="form-control"
-                                            placeholder="Scan Barcode..."
-                                            value={barcode}
-                                            onChange={this.handleOnChangeBarcode}
+                                            placeholder="Scan Barcode"
+                                            onChange={this.handleChangeSearch}
+                                            onKeyDown={this.handleSearch}
                                         />
                                     </form>
                                 </div>
@@ -1240,7 +1376,7 @@ class Cart extends Component {
                                         </thead>
                                         <tbody>
                                             {cart.map((c) => (
-                                                <tr key={c.id} className="rite">
+                                                <tr key={c.barcode} className="rite">
                                                     <td>{c.name.toUpperCase()}</td>
                                                     <td className="text-right1">
                                                         {window.APP.currency_symbol}{" "}
@@ -1249,23 +1385,41 @@ class Cart extends Component {
                                                         ).toFixed(2)}
                                                     </td>
                                                     <td>
+                                                        {/* {c.pivot.quantity} */}
                                                         <input type="text"
+                                                            id="text-a"
                                                             className="form-control form-control-sm qty pricer"
                                                             value={c.pivot.quantity}
-                                                            onChange={(event) =>
-                                                                this.handleChangeQty(
-                                                                    c.bar,
-                                                                    event.target.value
-                                                                )
+                                                            max={data.available
                                                             }
+
+                                                            onChange={
+                                                                (event) => {
+                                                                    this.addProductToCartManually(c, event.target.value)
+                                                                }
+
+                                                                // this.handleChangeQty(c.barcode, event.target.value);
+                                                            }
+
+
+                                                            // this.handleChangeQty(c.bar, event.target.value)
+
+                                                            onBlur={(event) => {
+                                                                if (event.target.value > f.available) {
+
+                                                                    this.handleChangeQty(c.barcode, f.available);
+                                                                }
+                                                            }}
+
                                                         />
                                                         <button
+                                                            style={{ marginLeft: 100 }}
                                                             className="btn btn-danger btn-sm del"
                                                             onClick={() =>
-                                                                this.handleClickDelete(
-                                                                    c.id
-                                                                )
+                                                                this.handleClickDelete(c.barcode)
+                                                                // this.handleClickDelete(c.indexof(c))
                                                             }
+
                                                         >
                                                             <BiTrash className="trash" />
                                                         </button>
@@ -1342,14 +1496,13 @@ class Cart extends Component {
                             </div>
                         </div >
                         <div className="col-md-6 col-lg-5">
-                            <div className="mb-2">
+                            <div className="mb-2 search11">
                                 <input
-                                    size="30"
                                     type="text"
                                     className="form-control"
-                                    placeholder="Search Product..."
-                                    onChange={this.handleChangeSearch}
-                                    onKeyDown={this.handleSearch}
+                                    placeholder="Search Product ID"
+                                    value={barcode}
+                                    onChange={this.handleOnChangeBarcode}
                                 />
                             </div>
                             {/* <div className="order-product">
@@ -1373,23 +1526,39 @@ class Cart extends Component {
                         ))}
                     </div> */}
                             <div className="order-product">
-                                {this.state.newData.map((d) => (
-                                    <div
-                                        style={{}}
-                                        onClick={() => {
-                                            this.addProductToCart(d)
-                                        }}
-                                        key={d.barcode}
-                                        className="item"
-                                    >
-                                        <img src={d.logom} alt="no image" />
-                                        <p style={{ fontSize: 15, textAlign: 'center' }}>
-                                            <b> {d.name.toUpperCase().substring(0, 5)}</b>
-                                            <p style={{ fontSize: 12, textAlign: 'center' }}>Total Qty : {d.available}</p>
-                                            <p style={{ fontSize: 12, marginTop: -15, textAlign: 'center' }}>Price : Rs.{d.price}</p>
-                                        </p>
-                                    </div>
-                                ))}
+                                {
+                                    this.state.searchedData.length > 0 ? (
+                                        this.state.searchedData.slice(0, 16).map((d) => (
+                                            <div
+                                                style={{}}
+                                                onClick={() => { this.addProductToCart(d) }}
+                                                key={d.barcode}
+                                                className="item"
+                                            >
+                                                <img src={d.logom} alt="no image" />
+                                                <p style={{ fontSize: 15, textAlign: 'center' }}>
+                                                    <b> {d.name.toUpperCase().substring(0, 5)}</b>
+                                                    <p style={{ fontSize: 12, textAlign: 'center' }}>Total Qty : {d.available}</p>
+                                                    <p style={{ fontSize: 12, marginTop: -15, textAlign: 'center' }}>Price : Rs.{d.price}</p>
+                                                </p>
+                                            </div>
+                                        ))) : (
+                                        this.state.newData.slice(0, 16).map((d) => (
+                                            <div
+                                                style={{}}
+                                                onClick={() => { this.addProductToCart(d) }}
+                                                key={d.barcode}
+                                                className="item"
+                                            >
+                                                <img src={d.logom} alt="no image" />
+                                                <p style={{ fontSize: 15, textAlign: 'center' }}>
+                                                    <b> {d.name.toUpperCase().substring(0, 5)}</b>
+                                                    <p style={{ fontSize: 12, textAlign: 'center' }}>Total Qty : {d.available}</p>
+                                                    <p style={{ fontSize: 12, marginTop: -15, textAlign: 'center' }}>Price : Rs.{d.price}</p>
+                                                </p>
+                                            </div>
+                                        )))
+                                }
                             </div>
                         </div>
                     </div>)
@@ -1457,3 +1626,6 @@ export default Cart;
 if (document.getElementById("cart")) {
     ReactDOM.render(<Cart />, document.getElementById("cart"));
 }
+
+//1203
+//1334

@@ -4782,7 +4782,7 @@ fieldset:disabled a.btn {
 .btn-primary.disabled,
 .btn-primary:disabled {
   color: #fff;
-  background-color: #007bff;
+  background-color: #cfd42f;
   border-color: #007bff
 }
 
@@ -4844,7 +4844,7 @@ fieldset:disabled a.btn {
 
 .btn-success {
   color: #fff;
-  background-color: #28a745;
+  background-color: #f7f24e;
   border-color: #28a745;
   box-shadow: none
 }

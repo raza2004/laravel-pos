@@ -3,7 +3,7 @@
 @section('title', 'Customer List')
 @section('content-header', 'Customer List')
 @section('content-actions')
-    <a href="{{route('customers.create')}}" class="btn btn-primary">Add Customer</a>
+    <a href="{{route('customers.create')}}" class="btn btn-primary add-customer">Add Customer</a>
 @endsection
 @section('css')
     <link rel="stylesheet" href="{{ asset('plugins/sweetalert2/sweetalert2.min.css') }}">

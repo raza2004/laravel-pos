@@ -22,6 +22,22 @@ $fa-font-path: "@fortawesome/fontawesome-free/webfonts";
 // DataTables
 @import 'datatables.net-bs4/css/dataTables.bootstrap4.min.css';
 
+.create-product,
+.create-product:hover,
+.add-customer,
+.add-customer:hover {
+    background-color: #c5af09 !important;
+    margin-top: 3%;
+
+    border: 1px solid #897b0f !important;
+}
+
+
+.search11 {
+    font-size: x-large;
+    display: inline;
+}
+
 .row3 {
     background-color: blanchedalmond;
     width: 100%;
@@ -107,7 +123,7 @@ $fa-font-path: "@fortawesome/fontawesome-free/webfonts";
     padding: 5%;
     // display: block;
     background-color: #3232e2 !important;
-    // border: 1px solid #020257;
+    border: 1px solid #020257;
     margin-top: 5px;
     margin-bottom: 3px;
     margin-left: -11%;
@@ -156,6 +172,7 @@ $fa-font-path: "@fortawesome/fontawesome-free/webfonts";
 .order-product {
     max-width: 100%;
     margin-left: 10;
+    margin-top: 1.5%;
 
     .item {
         float: left;
@@ -223,4 +240,13 @@ $fa-font-path: "@fortawesome/fontawesome-free/webfonts";
 /* Handle on hover */
 .card::-webkit-scrollbar-thumb:hover {
     background: #b30000;
+}
+
+.btnopen,
+.btnopen:hover {
+    background-color: #95850b !important;
+    position: relative;
+    margin-top: 3%;
+    border: 1px solid #95850b !important;
+
 }

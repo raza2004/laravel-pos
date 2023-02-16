@@ -22,6 +22,7 @@ class Cart extends Component {
             customers: [],
             barcode: "",
             search: "",
+            name: "",
             customer_id: "",
             isPayment: false,
             serachData: [],
@@ -931,7 +932,8 @@ class Cart extends Component {
         };
 
         this.loadCart = this.loadCart.bind(this);
-        this.handleOnChangeBarcode = this.handleOnChangeBarcode.bind(this);
+        // this.handleOnChangeBarcode = this.handleOnChangeBarcode.bind(this);
+        this.handleOnChangeName = this.handleOnChangeName.bind(this);
         this.handleScanBarcode = this.handleScanBarcode.bind(this);
         this.handleChangeQty = this.handleChangeQty.bind(this);
         this.handleEmptyCart = this.handleEmptyCart.bind(this);
@@ -999,34 +1001,66 @@ class Cart extends Component {
         console.log('updated Cart > ', actualData)
     }
 
-    addToCartByScan = async (recBarcode) => {
-        let filteredArray = []
-        let actualData = this.state.newData
-        for (let i = 0; i < actualData.length; i++) {
-            if (actualData[i].barcode === Number(recBarcode)) {
-                filteredArray.push(actualData[i])
-                await this.setState({ searchedData: filteredArray })
-                return
-            }
-            else if (actualData[i].barcode != Number(recBarcode)) {
-                await this.setState({ searchedData: [] })
+    // addToCartByScanBarcode = (recBarcode) => {
+    //     let filteredArray = []
+    //     let actualData = this.state.newData
+    //     for (let i = 0; i < actualData.length; i++) {
+    //         if (actualData[i].barcode === Number(recBarcode)) {
+    //             filteredArray.push(actualData[i])
+    //             this.setState({ searchedData: filteredArray })
+    //             return
+    //         }
+    //         else if (actualData[i].barcode != Number(recBarcode)) {
+    //             this.setState({ searchedData: [] })
 
-            }
-        }
-    }
+    //         }
+    //     }
+    // }
 
     loadProducts = (id) => {
         this.searchProduct(id)
     }
 
 
-    handleOnChangeBarcode(event) {
-        const barcode = event.target.value;
-        console.log('>>>', barcode);
-        this.setState({ barcode });
-        this.addToCartByScan(barcode)
+    // handleOnChangeBarcode(event) {
+    //     const barcode = event.target.value;
+    //     // const barcode = event.target.value;
+    //     // console.log('>>>', name);
+    //     this.setState({ barcode });
+    //     this.addToCartByScanBarcode(barcode);
+    //     // this.setState({ name });
+    //     // this.addToCartByScan(name)
+
+    // }
+
+    //new
+    handleOnChangeName(event) {
+        // const barcode = event.target.value;
+        const name = event.target.value;
+        console.log('>>>', name);
+        // this.setState({ barcode });
+        // this.addToCartByScan(barcode);
+        this.setState({ name });
+        this.addToCartByScan(name)
 
     }
+    addToCartByScan = (recName) => {
+        let filteredArray = []
+        let actualData = this.state.newData
+        for (let i = 0; i < actualData.length; i++) {
+            if (actualData[i].name.toUpperCase() === String(recName.toUpperCase())) {
+                filteredArray.push(actualData[i])
+                this.setState({ searchedData: filteredArray })
+                return
+            }
+            else if (actualData[i].name != String(recName.toUpperCase())) {
+                this.setState({ searchedData: [] })
+
+            }
+        }
+    }
+
+    //
 
     loadCart() {
         axios.get("/admin/cart").then((res) => {
@@ -1185,69 +1219,76 @@ class Cart extends Component {
     //     }
     // }
 
-    addProductToCartManually(newproduct, input) {
-        console.log('Input > ', input, '|   Product >', newproduct)
+    // addProductToCartManually(newproduct, input) {
+    //     console.log('Input > ', input, '|   Product >', newproduct)
+    //     if (input > newproduct.available) {
+    //         let err = new Error('Input exceeds available quantity');
+    //         console.log('Error > ', input > newproduct.available)
+    //         if (err) {
+    //             Swal.fire("Error!", err.response.data.message, "error");
+    //         }
+    //     }
+    // }
 
 
-        return
-        let product = this.state.newData.find((p) => p.barcode === data.barcode);
-        if (!!product) {
-            console.log('name > ', product.name)
-            // if product is already in cart
-            let cart = this.state.cart.find((c) => c.barcode === data.barcode);
-            console.log('Cart  ', this.state.cart)
-            if (!!cart) {
-                // update quantity
-                console.log('update qty ')
-                this.setState({
-                    cart: this.state.cart.map((c) => {
-                        if (c.barcode === data.barcode && data.available > c.pivot.quantity) {
-                            c.pivot.quantity = c.pivot.quantity + 1;
-                        } if (c.barcode === data.barcode && data.available === c.pivot.quantity) {
-                            Swal.fire("Error!", "Stock Limit Exceeded", "error");
-                        }
-                        return c;
-                    }),
-                });
-            } else {
-                console.log('add new item ')
-                if (product.available > 0) {
-                    product = {
-                        ...product,
-                        pivot: {
-                            quantity: 1,
-                            product_id: data.barcode,
-                            user_id: 1,
-                        },
-                    };
 
-                    this.setState({ cart: [...this.state.cart, product] });
-                }
-            }
-            console.log('cart {{>}} ', this.state.cart)
-            // axios
-            //     .post("/admin/cart", { barcode })
-            //     .then((res) => {
-            //         this.loadCart();
-            //         console.log('Axios Response on adding cart > ', res);
-            //     })
-            //     .catch((err) => {
-            //         Swal.fire("Error!", err.response.data.message, "error");
-            //     });
-        }
+    // let newproduct = this.state.newData.find((p) => p.barcode === data.barcode);
+    // if (!!newproduct) {
+    //     console.log('name > ', newproduct.name)
+    //     // if product is already in cart
+    //     let cart = this.state.cart.find((c) => c.barcode === data.barcode);
+    //     console.log('Cart  ', this.state.cart)
+    //     if (!!cart) {
+    //         // update quantity
+    //         console.log('update qty ')
+    //         this.setState({
+    //             cart: this.state.cart.map((c) => {
+    //                 if (c.barcode === data.barcode && data.available > c.pivot.quantity) {
+    //                     c.pivot.quantity = c.pivot.quantity + 1;
+    //                 } if (c.barcode === data.barcode && data.available === c.pivot.quantity) {
+    //                     Swal.fire("Error!", "Stock Limit Exceeded", "error");
+    //                 }
+    //                 return c;
+    //             }),
+    //         });
+    //     } else {
+    //         console.log('add new item ')
+    //         if (product.available > 0) {
+    //             product = {
+    //                 ...product,
+    //                 pivot: {
+    //                     quantity: 1,
+    //                     product_id: data.barcode,
+    //                     user_id: 1,
+    //                 },
+    //             };
 
-    }
+    //             this.setState({ cart: [...this.state.cart, product] });
+    //         }
+    //     }
+    //     console.log('cart {{>}} ', this.state.cart)
+    // axios
+    //     .post("/admin/cart", { barcode })
+    //     .then((res) => {
+    //         this.loadCart();
+    //         console.log('Axios Response on adding cart > ', res);
+    //     })
+    //     .catch((err) => {
+    //         Swal.fire("Error!", err.response.data.message, "error");
+    //     });
+
+
 
     addProductToCart(data) {
         let product = this.state.newData.find((p) => p.barcode === data.barcode);
         if (!!product) {
-            console.log('name > ', product.name)
+            // console.log('name > ', product.name)
             // if product is already in cart
             let cart = this.state.cart.find((c) => c.barcode === data.barcode);
             console.log('Cart  ', this.state.cart)
             if (!!cart) {
                 // update quantity
-                console.log('update qty ')
+                // console.log('update qty ')
                 this.setState({
                     cart: this.state.cart.map((c) => {
                         if (c.barcode === data.barcode && data.available > c.pivot.quantity) {
@@ -1327,9 +1368,9 @@ class Cart extends Component {
             }
         };
 
-    }
+    };
     render() {
-        const { cart, products, customers, barcode } = this.state;
+        const { cart, products, customers, barcode, newData, name } = this.state;
         return (
             <div>
                 {this.state.isPayment === false ?
@@ -1385,42 +1426,32 @@ class Cart extends Component {
                                                         ).toFixed(2)}
                                                     </td>
                                                     <td>
-                                                        {/* {c.pivot.quantity} */}
-                                                        <input type="text"
-                                                            id="text-a"
+                                                        {c.pivot.quantity}
+                                                        {/* <input type="text"
+                                                            id="text"
                                                             className="form-control form-control-sm qty pricer"
                                                             value={c.pivot.quantity}
-                                                            max={data.available
-                                                            }
+                                                            // max={data.available
+                                                            // }
 
                                                             onChange={
                                                                 (event) => {
-                                                                    this.addProductToCartManually(c, event.target.value)
-                                                                }
+                                                                    // this.addProductToCartManually(c, event.target.value)
 
-                                                                // this.handleChangeQty(c.barcode, event.target.value);
+                                                                    this.handleChangeQty(c.barcode, event.target.value);
+                                                                }
                                                             }
 
 
-                                                            // this.handleChangeQty(c.bar, event.target.value)
-
-                                                            onBlur={(event) => {
-                                                                if (event.target.value > f.available) {
-
-                                                                    this.handleChangeQty(c.barcode, f.available);
-                                                                }
-                                                            }}
-
-                                                        />
+                                                        /> */}
                                                         <button
                                                             style={{ marginLeft: 100 }}
                                                             className="btn btn-danger btn-sm del"
                                                             onClick={() =>
                                                                 this.handleClickDelete(c.barcode)
                                                                 // this.handleClickDelete(c.indexof(c))
-                                                            }
+                                                            }>
 
-                                                        >
                                                             <BiTrash className="trash" />
                                                         </button>
                                                     </td>
@@ -1500,9 +1531,9 @@ class Cart extends Component {
                                 <input
                                     type="text"
                                     className="form-control"
-                                    placeholder="Search Product ID"
-                                    value={barcode}
-                                    onChange={this.handleOnChangeBarcode}
+                                    placeholder="Search Product ID or Name"
+                                    value={name.toUpperCase()}
+                                    onChange={this.handleOnChangeName}
                                 />
                             </div>
                             {/* <div className="order-product">

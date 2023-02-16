@@ -1088,40 +1088,52 @@ class Cart extends Component {
         }
     }
     handleChangeQty(product_id, qty) {
-
-        const newCart = this.state.cart.map((c) => {
-            if (c.barcode === product_id) {
-                this.state.newData.map((f) => {
-                    if (f.barcode === product_id && f.available > c.pivot.quantity) {
-                        c.pivot.quantity = qty;
-                    }
-                })
-            }
-            return c;
-        });
-
-        this.setState({ newCart });
-        if (!qty) return;
-
-
-
         const cart = this.state.cart.map((c) => {
             if (c.barcode === product_id) {
-                c.pivot.quantity = qty;
+                const maxQty = this.getMaxAvailableQuantity(product_id);
+
+                if (!qty) {
+                    c.pivot.quantity = 0;
+                } else {
+                    const newQty = parseInt(qty, 10);
+
+                    if (isNaN(newQty)) {
+                        // Display an error message to the user
+                        Swal.fire('Please enter a valid quantity');
+                        return c;
+                    }
+
+                    if (newQty > maxQty) {
+                        // Display an error message to the user
+                        Swal.fire("Error!", `Only ${maxQty} units of this product are available`, "error");
+                        // alert(`Only ${maxQty} units of this product are available`);
+                        c.pivot.quantity = maxQty;
+                    } else {
+                        c.pivot.quantity = newQty;
+                    }
+                }
             }
+
             return c;
         });
 
         this.setState({ cart });
-        if (!qty) return;
-        return
-        axios
-            .post("/admin/cart/change-qty", { product_id, quantity: qty })
-            .then((res) => { })
-            .catch((err) => {
-                Swal.fire("Error!", err.response.data.message, "error");
-            });
     }
+
+
+
+    getMaxAvailableQuantity(product_id) {
+        const product = this.state.newData.find(p => p.barcode === product_id);
+        return product ? product.available : 0;
+    };
+
+    //     axios
+    //         .post("/admin/cart/change-qty", { product_id, quantity: qty })
+    //         .then((res) => { })
+    //         .catch((err) => {
+    //             Swal.fire("Error!", err.response.data.message, "error");
+    //         });
+    // }
 
     getTotal(cart) {
         const total = cart.map((c) => c.pivot.quantity * c.price);
@@ -1293,7 +1305,7 @@ class Cart extends Component {
                     cart: this.state.cart.map((c) => {
                         if (c.barcode === data.barcode && data.available > c.pivot.quantity) {
                             c.pivot.quantity = c.pivot.quantity + 1;
-                        } if (c.barcode === data.barcode && data.available === c.pivot.quantity) {
+                        } else if (c.barcode === data.barcode && data.available === c.pivot.quantity) {
                             Swal.fire("Error!", "Stock Limit Exceeded", "error");
                         }
                         return c;
@@ -1426,13 +1438,12 @@ class Cart extends Component {
                                                         ).toFixed(2)}
                                                     </td>
                                                     <td>
-                                                        {c.pivot.quantity}
-                                                        {/* <input type="text"
+                                                        {/* {c.pivot.quantity} */}
+                                                        <input type="text"
                                                             id="text"
                                                             className="form-control form-control-sm qty pricer"
                                                             value={c.pivot.quantity}
-                                                            // max={data.available
-                                                            // }
+                                                            max={3}
 
                                                             onChange={
                                                                 (event) => {
@@ -1443,7 +1454,7 @@ class Cart extends Component {
                                                             }
 
 
-                                                        /> */}
+                                                        />
                                                         <button
                                                             style={{ marginLeft: 100 }}
                                                             className="btn btn-danger btn-sm del"
@@ -1531,7 +1542,7 @@ class Cart extends Component {
                                 <input
                                     type="text"
                                     className="form-control"
-                                    placeholder="Search Product ID or Name"
+                                    placeholder="Search Product Name"
                                     value={name.toUpperCase()}
                                     onChange={this.handleOnChangeName}
                                 />
@@ -1566,9 +1577,9 @@ class Cart extends Component {
                                                 key={d.barcode}
                                                 className="item"
                                             >
-                                                <img src={d.logom} alt="no image" />
+                                                <img src={d.logom} alt="no image"></img>
                                                 <p style={{ fontSize: 15, textAlign: 'center' }}>
-                                                    <b> {d.name.toUpperCase().substring(0, 5)}</b>
+                                                    <b> {d.name.toUpperCase().substring(0, 7)}</b>
                                                     <p style={{ fontSize: 12, textAlign: 'center' }}>Total Qty : {d.available}</p>
                                                     <p style={{ fontSize: 12, marginTop: -15, textAlign: 'center' }}>Price : Rs.{d.price}</p>
                                                 </p>
@@ -1582,8 +1593,8 @@ class Cart extends Component {
                                                 className="item"
                                             >
                                                 <img src={d.logom} alt="no image" />
-                                                <p style={{ fontSize: 15, textAlign: 'center' }}>
-                                                    <b> {d.name.toUpperCase().substring(0, 5)}</b>
+                                                <p style={{ fontSize: 13, textAlign: 'center' }}>
+                                                    <b> {d.name.toUpperCase().substring(0, 32)}</b>
                                                     <p style={{ fontSize: 12, textAlign: 'center' }}>Total Qty : {d.available}</p>
                                                     <p style={{ fontSize: 12, marginTop: -15, textAlign: 'center' }}>Price : Rs.{d.price}</p>
                                                 </p>

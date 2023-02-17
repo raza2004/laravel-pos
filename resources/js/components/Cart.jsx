@@ -1,12 +1,12 @@
 import React, { Component, } from "react";
 import ReactDOM from "react-dom";
 import axios from "axios";
-import { ReactSearchAutocomplete } from 'react-search-autocomplete'
 
+// import html2pdf from 'html2pdf.js';
 import Swal from "sweetalert2";
 import { find, sum } from "lodash";
 import { BiTrash } from 'react-icons/bi';
-import noProduct from '../../../storage/app/public/products/noProduct.png'
+
 import { Alert, Button } from "bootstrap";
 import { ImCross } from "react-icons/im";
 import { data } from "jquery";
@@ -15,17 +15,19 @@ class Cart extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            printBill: "print detail",
             orderDetail: "order detail",
             cart: [],
             grandTotal: 0,
             products: [],
+            print: "",
             customers: [],
             barcode: "",
             search: "",
             name: "",
             customer_id: "",
             isPayment: false,
-            serachData: [],
+            searchData: [],
             newData: [
                 {
                     "barcode": 778,
@@ -943,6 +945,7 @@ class Cart extends Component {
         this.handleSearch = this.handleSearch.bind(this);
         this.setCustomerId = this.setCustomerId.bind(this);
         this.handleClickSubmit = this.handleClickSubmit.bind(this);
+        this.printBill = this.printBill.bind(this);
     }
 
 
@@ -1338,6 +1341,63 @@ class Cart extends Component {
             //     });
         }
     }
+    print() {
+        var objFra = document.getElementById('myFrame');
+        objFra.contentWindow.focus();
+        objFra.contentWindow.print();
+    }
+    printBill() {
+        Swal.fire({
+            title: "Order Amount",
+            input: "text",
+            width: '700px',
+            inputValue: this.getTotal(this.state.cart).replace(/"/g, ""),
+            showCancelButton: true,
+            confirmButtonText: "Print",
+            html: `<table style="
+                font-family: arial, sans-serif;
+                margin-top: -30px;
+                border-collapse: collapse;
+                width: 100%;
+              ">
+                <tr style="
+                  border: 1px solid #dddddd;
+                  text-align: left;
+                  padding: 10px;
+                  background-color: #cfcfcf;
+                  font-size: 15px;
+                ">
+                  <th>Item Name</th>
+                  <th>Quantity</th>
+                  <th>Price (Rs)</th>
+                  <th>Sub Total (Rs)</th>
+                </tr>
+                ${this.state.cart.map((item) => (
+                `<tr style=" text-align: left;">
+                    <td>${item.name.toUpperCase()}</td>
+                    <td>${item.pivot.quantity}.0</td>
+                    <td class="a">${item.price}.00</td>
+                    <td class="b">${item.pivot.quantity * item.price}.00</td>
+                  </tr>`
+            ))}
+               
+                <tr style="background-color: #ada3a3; font-size: 18px; text-align: left;">
+                  <td><b>Grand Total </b></td>
+                  <td></td>
+                  <td></td>
+                  <td><b>Rs. ${this.getTotal(this.state.cart)}.00</b></td>
+                </tr>
+              </table>
+            `,
+
+
+
+
+        }
+        )
+
+
+    }
 
 
     setCustomerId(event) {
@@ -1519,17 +1579,18 @@ class Cart extends Component {
                                     <button style={{ marginLeft: 5, }}
                                         type="button"
                                         className="btn btn-success btn-block btn22"
-                                        onClick={() => {
-                                            this.setState({ isPayment: true },
-                                                () => {
-                                                    let total = 0
-                                                    for (let i = 0; i < this.state.cart.length; i++) {
-                                                        total = total + this.state.cart[i].price * this.state.cart[i].pivot.quantity
-                                                    }
-                                                    this.setState({ grandTotal: total })
-                                                })
-                                        }}
-                                        disabled={!cart.length}
+                                        // onClick={() => {
+                                        //     this.setState({ isPayment: true },
+                                        //         () => {
+                                        //             let total = 0
+                                        //             for (let i = 0; i < this.state.cart.length; i++) {
+                                        //                 total = total + this.state.cart[i].price * this.state.cart[i].pivot.quantity
+                                        //             }
+                                        //             this.setState({ grandTotal: total });
+                                        //         })
+                                        // }}
+                                        onClick={this.printBill}
+                                    // disabled={!cart.length}
                                     >
                                         Print Bill
                                     </button>

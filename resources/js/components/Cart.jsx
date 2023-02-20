@@ -1390,7 +1390,7 @@ class Cart extends Component {
             // showCancelButton: true,
             confirmButtonText: "Close",
             html: `
-            <button type="button" onClick = ${this.print})} style="margin-right:-80%; background-color:blue; border-radius:3%; color:white; width: 20%;">Print</button>
+            <button type="button" onClick = ${this.print})} style="margin-right:-80%; background-color:blue; border-radius:3%; color:white; width: 17%;padding:2px;">Print</button>
             <div id="slip1">
             
             <div style=" margin-top: -1px;">

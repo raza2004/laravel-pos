@@ -22,6 +22,15 @@ $fa-font-path: "@fortawesome/fontawesome-free/webfonts";
 // DataTables
 @import 'datatables.net-bs4/css/dataTables.bootstrap4.min.css';
 
+
+
+@media print {
+
+    .to-print {
+        width: 40%;
+    }
+}
+
 .create-product,
 .create-product:hover,
 .add-customer,
@@ -98,6 +107,16 @@ $fa-font-path: "@fortawesome/fontawesome-free/webfonts";
 .col2 {
     width: 47%;
     padding: 5px;
+}
+
+.swal2-confirm {
+    display: none;
+
+}
+
+.swal2-show {
+    height: auto !important;
+    display: block !important;
 }
 
 .btn2 {

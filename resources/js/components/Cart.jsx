@@ -1,7 +1,7 @@
 import React, { Component, } from "react";
 import ReactDOM from "react-dom";
 import axios from "axios";
-
+import print from 'print-js'
 // import html2pdf from 'html2pdf.js';
 import Swal from "sweetalert2";
 import { find, sum } from "lodash";
@@ -10,6 +10,8 @@ import { BiTrash } from 'react-icons/bi';
 import { Alert, Button } from "bootstrap";
 import { ImCross } from "react-icons/im";
 import { data } from "jquery";
+import printJS from "print-js";
+<script src="print.js"></script>
 const yoloUrl = 'https://yolofood.qa/';
 class Cart extends Component {
     constructor(props) {
@@ -18,6 +20,7 @@ class Cart extends Component {
             printBill: "print detail",
             orderDetail: "order detail",
             cart: [],
+            printForm: "",
             grandTotal: 0,
             products: [],
             print: "",
@@ -1341,53 +1344,109 @@ class Cart extends Component {
             //     });
         }
     }
+    // print() {
+    //     var objFra = document.getElementById('myFrame');
+    //     objFra.contentWindow.focus();
+    //     objFra.contentWindow.print();
+    // }
+
     print() {
-        var objFra = document.getElementById('myFrame');
-        objFra.contentWindow.focus();
-        objFra.contentWindow.print();
+        window.print();
     }
     printBill() {
+
+        var date = new Date();
+        var current_date = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+        var date = new Date();
+        var hours = date.getHours();
+        var minutes = date.getMinutes();
+        var seconds = date.getSeconds()
+        // Check whether AM or PM
+        var newformat = hours >= 12 ? 'PM' : 'AM';
+
+        // Find current hour in AM-PM Format
+        hours = hours % 12;
+
+        // To display "0" as "12"
+        hours = hours ? hours : 12;
+        minutes = minutes < 10 ? '0' + minutes : minutes;
+        var current_time = hours + ":" + minutes + ":" + seconds + "&nbsp" + newformat;
+
+        function printForm() {
+            printJS({
+                printable: 'slip',
+                type: 'html',
+                targetStyles: ['*'],
+                header: 'PrintJS - Print Form With Customized Header'
+            })
+        }
+
         Swal.fire({
-            title: "Order Amount",
-            input: "text",
-            width: '700px',
-            inputValue: this.getTotal(this.state.cart).replace(/"/g, ""),
-            showCancelButton: true,
-            confirmButtonText: "Print",
-            html: `<table style="
+
+            // input: "text",
+            width: '560px',
+
+            // inputValue: this.getTotal(this.state.cart).replace(/"/g, ""),
+            // showCancelButton: true,
+            confirmButtonText: "Close",
+            html: `
+            <button type="button" onClick = ${this.print})} style="margin-right:-80%; background-color:blue; border-radius:3%; color:white; width: 20%;">Print</button>
+            <div id="slip1">
+            
+            <div style=" margin-top: -1px;">
+
+            <h2><b>YOLO FOODS</b></h2>  
+ 
+            <h2><b>#YL-4432</b></h2>
+            <h6>Gulshan-e-Iqbal. block 13</h6>
+            <h6>0300-1234567</h6></div>
+            <div style="display:inline">
+            <h6 style="margin-right:85%;"><b>Date/Time</b></h6>
+            <h6 style="margin-right:65%; width: max-content;;">${current_date}&nbsp${current_time}</h6><br/>
+            </div>
+            <div style="margin-top: 30px;">
+            <h2><b>Order No. 03</b></h2>
+            </div>
+            <table style="
+            border-spacing: 30px;
                 font-family: arial, sans-serif;
-                margin-top: -30px;
-                border-collapse: collapse;
+                
+               
                 width: 100%;
               ">
                 <tr style="
                   border: 1px solid #dddddd;
                   text-align: left;
-                  padding: 10px;
-                  background-color: #cfcfcf;
-                  font-size: 15px;
+                  padding: 4px;
+                  
+                  font-size: 14px;
                 ">
+                <th>Quantity</th>
                   <th>Item Name</th>
-                  <th>Quantity</th>
-                  <th>Price (Rs)</th>
-                  <th>Sub Total (Rs)</th>
+                  <th style="width:max-content">&nbspPrice</th>
+                  <th>&nbspSub Total</th>
                 </tr>
                 ${this.state.cart.map((item) => (
-                `<tr style=" text-align: left;">
+                `<tr style=" text-align: left; font-size:14px;">
+                <td >${item.pivot.quantity}.0</td>
                     <td>${item.name.toUpperCase()}</td>
-                    <td>${item.pivot.quantity}.0</td>
-                    <td class="a">${item.price}.00</td>
-                    <td class="b">${item.pivot.quantity * item.price}.00</td>
+
+                    <td class="a" style="width:max-content">&nbsp${item.price}.00</td>
+                    <td class="b" style:"margin-left:2%">&nbsp${item.pivot.quantity * item.price}.00</td>
                   </tr>`
             ))}
                
-                <tr style="background-color: #ada3a3; font-size: 18px; text-align: left;">
-                  <td><b>Grand Total </b></td>
+                <tr style=font-size: 13px; text-align: left;">
+                  <td style="position:absolute"><b>Grand Total</b></td>
                   <td></td>
                   <td></td>
                   <td><b>Rs. ${this.getTotal(this.state.cart)}.00</b></td>
                 </tr>
               </table>
+              <br/><br/>
+              <h3><b>Thanks for using our service</b></h3>
+              
+              </div>
             `,
 
 
@@ -1416,6 +1475,7 @@ class Cart extends Component {
                     .post("/admin/orders", {
                         customer_id: this.state.customer_id,
                         amount,
+                        // total: this.getTotal(this.state.cart),
                     })
                     .then((res) => {
                         this.loadCart();

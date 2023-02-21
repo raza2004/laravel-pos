@@ -1372,14 +1372,7 @@ class Cart extends Component {
         minutes = minutes < 10 ? '0' + minutes : minutes;
         var current_time = hours + ":" + minutes + ":" + seconds + "&nbsp" + newformat;
 
-        function printForm() {
-            printJS({
-                printable: 'slip',
-                type: 'html',
-                targetStyles: ['*'],
-                header: 'PrintJS - Print Form With Customized Header'
-            })
-        }
+
 
         Swal.fire({
 
@@ -1392,7 +1385,7 @@ class Cart extends Component {
             html: `
             <button type="button" onClick = ${this.print})} style="margin-right:-80%; background-color:blue; border-radius:3%; color:white; width: 17%;padding:2px;">Print</button>
             <div id="slip1">
-            
+
             <div style=" margin-top: -1px;">
 
             <h2><b>YOLO FOODS</b></h2>  
@@ -1404,16 +1397,13 @@ class Cart extends Component {
             <h6 style="margin-right:85%;"><b>Date/Time</b></h6>
             <h6 style="margin-right:65%; width: max-content;;">${current_date}&nbsp${current_time}</h6><br/>
             </div>
-            <div style="margin-top: 30px;">
+            <div style="margin-top: 3px;">
             <h2><b>Order No. 03</b></h2>
             </div>
-            <table style="
-            border-spacing: 30px;
-                font-family: arial, sans-serif;
-                
-               
-                width: 100%;
-              ">
+          
+          
+            <table style="border-spacing: 30px;font-family: arial, sans-serif;width: 100%;margin-top:1px">
+
                 <tr style="
                   border: 1px solid #dddddd;
                   text-align: left;
@@ -1434,7 +1424,7 @@ class Cart extends Component {
                     <td class="a" style="width:max-content">&nbsp${item.price}.00</td>
                     <td class="b" style:"margin-left:2%">&nbsp${item.pivot.quantity * item.price}.00</td>
                   </tr>`
-            ))}
+            )).join('')}
                
                 <tr style=font-size: 13px; text-align: left;">
                   <td style="position:absolute"><b>Grand Total</b></td>
@@ -1448,8 +1438,6 @@ class Cart extends Component {
               
               </div>
             `,
-
-
 
 
         }
@@ -1466,6 +1454,7 @@ class Cart extends Component {
         Swal.fire({
             title: "Received Amount",
             input: "text",
+            html: `<h2>${this.getTotal(this.state.cart)}</h2>`,
             inputValue: this.getTotal(this.state.cart),
             showCancelButton: true,
             confirmButtonText: "Send",
@@ -1475,7 +1464,7 @@ class Cart extends Component {
                     .post("/admin/orders", {
                         customer_id: this.state.customer_id,
                         amount,
-                        // total: this.getTotal(this.state.cart),
+                        total: this.getTotal(this.state.cart),
                     })
                     .then((res) => {
                         this.loadCart();

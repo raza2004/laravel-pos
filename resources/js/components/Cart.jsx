@@ -1383,7 +1383,7 @@ class Cart extends Component {
             // showCancelButton: true,
             confirmButtonText: "Close",
             html: `
-            <button type="button" onClick = ${this.print})} style="margin-right:-80%; background-color:blue; border-radius:3%; color:white; width: 17%;padding:2px;">Print</button>
+            <button type="button" onClick = ${this.print})} style="margin-right:-85%; background-color:blue; border-radius:3%; color:white; width: 17%;padding:2px;border:1px solid blue">Print</button>
             <div id="slip1">
 
             <div style=" margin-top: -1px;">
@@ -1470,9 +1470,9 @@ class Cart extends Component {
                         this.loadCart();
                         return res.data;
                     })
-                    .catch((err) => {
-                        Swal.showValidationMessage(err.response.data.message);
-                    });
+                // .catch((err) => {
+                //     Swal.showValidationMessage(err.response.data.message);
+                // });
             },
             allowOutsideClick: () => !Swal.isLoading(),
         }).then((result) => {
@@ -1639,7 +1639,7 @@ class Cart extends Component {
                                         //         })
                                         // }}
                                         onClick={this.printBill}
-                                    // disabled={!cart.length}
+                                        disabled={!cart.length}
                                     >
                                         Print Bill
                                     </button>
@@ -1688,8 +1688,8 @@ class Cart extends Component {
                                                 className="item"
                                             >
                                                 <img src={d.logom} alt="no image"></img>
-                                                <p style={{ fontSize: 15, textAlign: 'center' }}>
-                                                    <b> {d.name.toUpperCase().substring(0, 7)}</b>
+                                                <p style={{ fontSize: 12, textAlign: 'center' }}>
+                                                    <b> {d.name.toUpperCase().substring(0, 20)}</b>
                                                     <p style={{ fontSize: 12, textAlign: 'center' }}>Total Qty : {d.available}</p>
                                                     <p style={{ fontSize: 12, marginTop: -15, textAlign: 'center' }}>Price : Rs.{d.price}</p>
                                                 </p>

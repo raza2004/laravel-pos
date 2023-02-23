@@ -47,6 +47,10 @@ $fa-font-path: "@fortawesome/fontawesome-free/webfonts";
     display: inline;
 }
 
+.swal2-popup .swal2-input {
+    display: none !important;
+}
+
 .row3 {
     background-color: blanchedalmond;
     width: 100%;
@@ -121,7 +125,7 @@ $fa-font-path: "@fortawesome/fontawesome-free/webfonts";
 
 .btn2 {
     background-color: #3232e2 !important;
-    border: 1px solid #020257;
+    border: 1px solid #020257 !important;
     color: #fff;
     margin-top: -07px;
     // position: relative;
@@ -151,7 +155,7 @@ $fa-font-path: "@fortawesome/fontawesome-free/webfonts";
     padding: 5%;
     // display: block;
     background-color: #3232e2 !important;
-    border: 1px solid #020257;
+    border: 1px solid #020257 !important;
     margin-top: 5px;
     margin-bottom: 3px;
     margin-left: -11%;
@@ -162,7 +166,7 @@ $fa-font-path: "@fortawesome/fontawesome-free/webfonts";
     width: 70% !important;
     padding: 5%;
     margin-top: 5px;
-    background-color: #0bc01a;
+    background-color: #0bc01a !important;
     color: #ffffff;
     // border: 1px solid #777707;
     margin-bottom: 3px;
@@ -178,7 +182,7 @@ $fa-font-path: "@fortawesome/fontawesome-free/webfonts";
 
 .btn2:hover {
     background-color: #0a0a47 !important;
-    border: #101083;
+    border: #101083 !important;
 }
 
 .user-cart {

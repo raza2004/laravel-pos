@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
+
 
 class LoginController extends Controller
 {
@@ -37,4 +39,56 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
     }
+
+
+
+
+
+    // new login functioins below:
+    // new login functioins below:
+    // new login functioins below:
+    // new login functioins below:
+    // new login functioins below:
+    // new login functioins below:
+
+
+
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {        
+        return view('auth.login');
+    }
+    
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+
+        // Validation Data
+        $request->validate([
+            'email' => 'required|max:500',
+            'password' => 'required|max:500',
+        ]);
+
+        // Create New Employee
+        $email = $request->email;
+        $password = $request->password;
+
+        print_r("email : $email  +  password :$password");
+        die;
+
+
+        session()->flash('success', 'Employee has been created !!');
+        return redirect()->route('login.create');
+    }
+
 }

@@ -63,10 +63,20 @@ $fa-font-path: "@fortawesome/fontawesome-free/webfonts";
 
 .rite {
     background-color: rgb(249, 253, 233) !important;
+    
 }
 
+
+
+.tdmy {
+   width: 20px !important; 
+}
+.thmy{
+    width: 30% !important;
+}
 .text-right1 {
     margin-left: -9%;
+
 }
 
 .text-right {
@@ -86,6 +96,7 @@ $fa-font-path: "@fortawesome/fontawesome-free/webfonts";
 
 .trash {
     color: black;
+  
 }
 
 
@@ -103,7 +114,7 @@ $fa-font-path: "@fortawesome/fontawesome-free/webfonts";
 }
 
 .form-control {
-    width: 92.5%;
+    width: 96.5%;
     display: block;
     margin-left: 1.9%;
 }
@@ -211,7 +222,7 @@ $fa-font-path: "@fortawesome/fontawesome-free/webfonts";
         border: 1px solid #ccc;
         border-radius: 3px;
         background: #fcfcf8;
-        width: 22%;
+        width: 23%;
         display: grid;
         justify-content: center;
         padding: 6px;
